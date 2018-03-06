@@ -1,0 +1,22 @@
+{
+  "name": "mobile-rn-webview",
+  "version": "0.0.1",
+  "description": "WebView with onShouldStartLoadWithRequest on Android platform",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:WileyLabs/mobile-react-native-libraries.git"
+  },
+  "main": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "author": "",
+  "license": "",
+  "peerDependencies": {
+    "react-native": "^0.52.2"
+  }
+}
