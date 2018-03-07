@@ -34,7 +34,7 @@ WebView with onShouldStartLoadWithRequest method supported on Android platform
 ## Usage
 
 ```javascript
-import Webview from 'mobile-rn-webview';
+import WebView from 'mobile-rn-webview';
 
 onShouldStartLoadWithRequest(event) {
     const { url } = event;
@@ -43,7 +43,7 @@ onShouldStartLoadWithRequest(event) {
 
 ...
 
-<WebView style={{flex: 1, borderWidth: 2, borderColor: 'red'}}
+<WebView style={{flex: 1}}
         source={{html: html}}
         onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest}
 />
