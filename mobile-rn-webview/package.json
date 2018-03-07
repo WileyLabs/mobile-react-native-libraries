@@ -3,6 +3,17 @@
   "version": "0.0.7",
   "description": "WebView with onShouldStartLoadWithRequest on Android platform",
   "license": "MIT",
+  "author": "John Wiley & Sons, Inc.",
+  "contributors": [
+    {
+      "name": "Dmitry Mikhaylov",
+      "email": "dmikhaylov@wiley.com"
+    },
+    {
+      "name": "Fedorov, Daniil",
+      "email": "dfedorov@wiley.com"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:WileyLabs/mobile-react-native-libraries.git"
@@ -14,7 +25,6 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
   "peerDependencies": {
     "react-native": ">=0.50.0"
   }
