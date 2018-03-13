@@ -145,9 +145,7 @@ public class RNMobileRnWebViewManager extends SimpleViewManager<WebView> {
 
                 WritableMap eventData = Arguments.createMap();
                 eventData.putString("url", uri.toString());
-                UrlLoadingEvent event = new UrlLoadingEvent(webView.getId(), eventData);
-                reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher().dispatchEvent(event);
-
+                dispatchEvent(view, new UrlLoadingEvent(view.getId(), eventData));
                 return true;
             } else {
                 try {
