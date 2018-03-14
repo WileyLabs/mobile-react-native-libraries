@@ -16,6 +16,6 @@
   ],
   "author": "",
   "peerDependencies": {
-    "react-native": "^0.52.2"
+    "react-native": "^0.50.0"
   }
 }
