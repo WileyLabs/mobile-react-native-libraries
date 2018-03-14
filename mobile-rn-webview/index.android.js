@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { WebView } from 'react-native';
 
-class MobileRNWebView extends WebView {
+class MobileRNWebView extends Component {
 
   constructor(props) {
     super(props);
     this.state = { source: props.source };
+    this.nativeConfig = { props: { onShouldStartLoadWithRequest: this.onShouldStartLoadWithRequest }};
+  }
+
+  componentWillReceiveProps({ source }) {
+    this.setState({ source });
   }
 
   onShouldStartLoadWithRequest = (event) => {
@@ -20,10 +25,17 @@ class MobileRNWebView extends WebView {
     }
   };
 
+  injectJavaScript = (data) => {
+    this.webView.injectJavaScript(data);
+  };
+
+  getRef = (webView) => {
+    this.webView = webView;
+  };
+
   render() {
     const { source } = this.state;
-    const nativeConfig = { props: { onShouldStartLoadWithRequest: this.onShouldStartLoadWithRequest }};
-    return <WebView {...this.props} source={source} nativeConfig={nativeConfig} />;
+    return <WebView ref={this.getRef} {...this.props} source={source} nativeConfig={this.nativeConfig} />;
   }
 
 }
