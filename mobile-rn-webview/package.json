@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-webview",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "WebView with onShouldStartLoadWithRequest on Android platform",
   "license": "MIT",
   "repository": {
@@ -16,6 +16,6 @@
   ],
   "author": "",
   "peerDependencies": {
-    "react-native": "^0.50.0"
+    "react-native": ">=0.50.0"
   }
 }
