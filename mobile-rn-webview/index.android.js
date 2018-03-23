@@ -29,6 +29,14 @@ class MobileRNWebView extends Component {
     this.webView.injectJavaScript(data);
   };
 
+  goBack = () => {
+    this.webView.goBack();
+  };
+
+  goForward = () => {
+    this.webView.goForward();
+  };
+
   getRef = (webView) => {
     this.webView = webView;
   };
