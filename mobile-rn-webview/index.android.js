@@ -37,6 +37,10 @@ class MobileRNWebView extends Component {
     this.webView.goForward();
   };
 
+  reload = () => {
+    this.webView.reload();
+  };
+
   getRef = (webView) => {
     this.webView = webView;
   };
