@@ -1,0 +1,36 @@
+{
+  "name": "mobile-rn-device-orientation",
+  "version": "0.0.1",
+  "description": "Device orientation helper module",
+  "license": "MIT",
+  "author": "John Wiley & Sons, Inc.",
+  "contributors": [
+    {
+      "name": "Dmitry Mikhaylov",
+      "email": "dmikhaylov@wiley.com"
+    },
+    {
+      "name": "Fedorov, Daniil",
+      "email": "dfedorov@wiley.com"
+    },
+    {
+      "name": "Efimov, Andrey",
+      "email": "aefimov@wiley.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:WileyLabs/mobile-react-native-libraries.git"
+  },
+  "main": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native"
+  ],
+  "peerDependencies": {
+    "react-native": ">=0.50.0",
+    "react-native-orientation": ">=3.1.3"
+  }
+}
