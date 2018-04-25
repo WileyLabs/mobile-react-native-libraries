@@ -5,7 +5,22 @@ A helper module to manage your device orientation state in Redux.
 
 ## Getting started
 
+### Step 1. Install mobile-rn-device-orientation
+
 `$ npm install mobile-rn-device-orientation --save`
+or
+`$ yarn add mobile-rn-device-orientation`
+
+### Step 2. Install react-native-orientation
+
+If you have already installed react-native-orientation as a dependency for your project you can skip this step. Otherwise run the following command:
+
+`$ npm install react-native-orientation --save`
+or
+`$ yarn add react-native-orientation`
+
+and then
+`$ react-native link react-native-orientation`
 
 ## Initialization (3 steps)
 
