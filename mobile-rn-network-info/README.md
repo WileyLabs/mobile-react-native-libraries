@@ -4,7 +4,7 @@ A helper module to manage network info state in Redux.
 
 ## Getting started
 
-### Install mobile-rn-device-orientation
+### Install mobile-rn-network-info
 
 ```
 $ npm install mobile-rn-network-info --save
