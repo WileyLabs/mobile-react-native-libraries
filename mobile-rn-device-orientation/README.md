@@ -30,12 +30,13 @@ $ react-native link react-native-orientation
 
 ```javascript
 // rootReducer.js
+
 import { combineReducers } from 'redux';
 import { reducer as deviceOrientationReducer, constants as deviceOrientationConstants } from 'mobile-rn-device-orientation';
 
 const rootReducer = combineReducers({
   ...
-   // Register deviceOrientationReducer
+   // Step 1. Register deviceOrientationReducer
    [deviceOrientationConstants.NAME]: deviceOrientationReducer,
   ...
 });
@@ -50,7 +51,7 @@ import { saga as deviceOrientationSaga } from 'mobile-rn-device-orientation';
 export default function* rootSaga() {
   yield all([
     ...
-   // Register deviceOrientationSaga
+   //  Step 2. Register deviceOrientationSaga
     call(deviceOrientationSaga),
     ...
   ]);
@@ -66,7 +67,7 @@ function* _initAppRequest({ navigator }) {
   console.log('----saga app._initAppRequest saga-----');
 
   ...
-  // Initialize device orientation module
+  // Step 3. Initialize device orientation module
   yield put(deviceOrientationActions.initRequest());
 
   // Put your app init logic here
@@ -82,8 +83,8 @@ export function* watchInitAppRequest() {
 ## Usage in React Native components
 
 ```javascript
-
 // HomeContainer.js
+
 import Home from './Home';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -91,12 +92,26 @@ import { selectors as deviceOrientationSelectors } from 'mobile-rn-device-orient
 
 function mapStateToProps(state) {
   return {
+    ...
+    // isLandscape() selector returns true when your device is in LANDSCAPE mode; otherwise it will return false
+    //
     landscape: deviceOrientationSelectors.isLandscape(state),
+    //
+    // deviceOrientation() selector returns one of the following values:
+    // "LANDSCAPE"
+    // "PORTRAIT"
+    // "PORTRAITUPSIDEDOWN"
+    // "UNKNOWN"
+    //
+    deviceOrientation: deviceOrientationSelectors.getDeviceOrientation(state)
+    ...
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    ...
+    ...
   }, dispatch);
 }
 
