@@ -1,4 +1,3 @@
-
 # mobile-rn-device-orientation
 
 A helper module to manage your device orientation state in Redux.
