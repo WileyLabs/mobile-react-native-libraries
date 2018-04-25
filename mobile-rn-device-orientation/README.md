@@ -15,7 +15,7 @@ $ yarn add mobile-rn-device-orientation
 
 ### Step 2. Install react-native-orientation
 
-If you have already installed react-native-orientation as a dependency for your project you can skip this step. Otherwise run the following command:
+If you have already installed [react-native-orientation](https://github.com/yamill/react-native-orientation) as a dependency for your project you can skip this step. Otherwise run the following command:
 
 ```
 $ npm install react-native-orientation --save
