@@ -2,6 +2,36 @@
 
 A helper module to manage your device orientation state in Redux.
 
+## Module Public Interfaces
+
+### Constants
+
+```javascript
+import { constants as deviceOrientationConstants } from 'mobile-rn-device-orientation'
+
+// deviceOrientationConstants.NAME - this constant will be used later in app root reducer and module selectors
+```
+
+### Action Creators
+
+```javascript
+import { actions as deviceOrientationActions } from 'mobile-rn-device-orientation'
+
+// deviceOrientationActions.initRequest() - dispatch this action on app launch to initialize the module
+```
+
+### Selectors
+```javascript
+import { selectors as deviceOrientationSelectors } from 'mobile-rn-device-orientation'
+
+// deviceOrientationSelectors.isLandscape() - returns true if your device is in landscape orientation; otherwise returns false;
+// deviceOrientationSelectors.getDeviceOrientation() - depending on the current orientation, returns one of the following string values:
+//   "LANDSCAPE"
+//   "PORTRAIT"
+//   "PORTRAITUPSIDEDOWN"
+//    "UNKNOWN"
+```
+
 ## Getting started
 
 ### Step 1. Install mobile-rn-device-orientation
@@ -96,11 +126,7 @@ function mapStateToProps(state) {
     //
     landscape: deviceOrientationSelectors.isLandscape(state),
     //
-    // deviceOrientation() selector returns one of the following values:
-    // "LANDSCAPE"
-    // "PORTRAIT"
-    // "PORTRAITUPSIDEDOWN"
-    // "UNKNOWN"
+    // deviceOrientation() selector returns one of the following string values "LANDSCAPE"|"PORTRAIT"|"PORTRAITUPSIDEDOWN"|"UNKNOWN"
     //
     deviceOrientation: deviceOrientationSelectors.getDeviceOrientation(state)
     ...

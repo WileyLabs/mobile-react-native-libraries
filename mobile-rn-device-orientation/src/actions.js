@@ -6,6 +6,8 @@ export const initRequest = () => ({ type: constants.INIT_REQUEST });
 // Action Creators for Reducer
 export const setOrientation = orientation => ({ type: constants.SET_ORIENTATION, orientation });
 
-export const publicActions = {
+const publicActions = {
   initRequest
 };
+
+export default publicActions;

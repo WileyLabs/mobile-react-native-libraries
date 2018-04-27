@@ -1,7 +1,5 @@
 import Orientation from 'react-native-orientation';
-import {
-  SET_ORIENTATION
-} from './constants';
+import { SET_ORIENTATION } from './constants';
 
 const initialState = {
   orientation: Orientation.getInitialOrientation()

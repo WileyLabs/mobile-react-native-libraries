@@ -4,7 +4,9 @@ export const getDeviceOrientation = state => state[NAME].orientation;
 
 export const isLandscape = state => state[NAME].orientation === 'LANDSCAPE';
 
-export const publicSelectors = {
+const publicSelectors = {
   getDeviceOrientation,
   isLandscape
 };
+
+export default publicSelectors;
