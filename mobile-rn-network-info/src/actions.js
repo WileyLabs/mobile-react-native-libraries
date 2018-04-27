@@ -14,8 +14,9 @@ export const onConnectionChange = (connected) => ({ type: constants.ON_CONNECTIO
 // Action Creators for Reducers
 export const setConnected = connected => ({ type: constants.SET_CONNECTED, connected });
 
-export const publicActions = {
+const publicActions = {
   initRequest,
-  updateRequest,
-  onConnectionChange
+  updateRequest
 };
+
+export default publicActions;

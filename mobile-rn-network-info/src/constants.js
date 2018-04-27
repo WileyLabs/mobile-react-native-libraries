@@ -10,7 +10,9 @@ export const ON_CONNECTION_CHANGE = 'networkInfo/ON_CONNECTION_CHANGE';
 
 export const SET_CONNECTED = 'networkInfo/SET_CONNECTED';
 
-export const publicConstants = {
+const publicConstants = {
   NAME,
   ON_CONNECTION_CHANGE
 };
+
+export default publicConstants;

@@ -2,6 +2,33 @@
 
 A helper module to manage network info state in Redux.
 
+## Module Public Interfaces
+
+### Constants
+
+```javascript
+import { constants as networkInfoConstants } from 'mobile-rn-network-info'
+
+// networkInfoConstants.NAME - this constant will be used later in app root reducer and module selectors
+// networkInfoConstants.ON_CONNECTION_CHANGE - subscribe to this action type if you want to be notified about connection change
+```
+
+### Action Creators
+
+```javascript
+import { actions as networkInfoActions } from 'mobile-rn-network-info'
+
+// networkInfoActions.initRequest() - dispatch this action on app launch to initialize the module
+// networkInfoActions.updateRequest() - dispatch this action to request module updating its state 
+```
+
+### Selectors
+```javascript
+import { selectors as networkInfoSelectors } from 'mobile-rn-network-info'
+
+// deviceOrientationSelectors.isConnected() - returns true when your device has network connection; otherwise returns false
+```
+
 ## Getting started
 
 ### Install mobile-rn-network-info
@@ -79,7 +106,7 @@ import { selectors as networkInfoSelectors } from 'mobile-rn-network-info';
 function mapStateToProps(state) {
   return {
     ...
-    // isConnected() selector returns true when your device has network connection; otherwise it will return false
+    // isConnected() selector returns true when your device has network connection; otherwise returns false
     //
     connected: networkInfoSelectors.isConnected(state),
     ...

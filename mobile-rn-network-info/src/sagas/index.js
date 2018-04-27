@@ -5,5 +5,8 @@ import { watchInitRequest } from './initRequest';
 import { watchUpdateRequest } from './updateRequest';
 
 export default function* networkInfoSaga() {
-  yield all([call(watchInitRequest), call(watchUpdateRequest)]);
+  yield all([
+    call(watchInitRequest),
+    call(watchUpdateRequest)
+  ]);
 }
