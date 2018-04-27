@@ -6,7 +6,9 @@ export const ON_APP_STATE_CHANGE = 'appState/ON_APP_STATE_CHANGE';
 
 export const SET_APP_STATE = 'appState/SET_APP_STATE';
 
-export const publicConstants = {
+const publicConstants = {
   NAME,
   ON_APP_STATE_CHANGE
 };
+
+export default publicConstants;

@@ -8,6 +8,8 @@ export const onAppStateChange = appState => ({ type: constants.ON_APP_STATE_CHAN
 // Action Creators for Reducer
 export const setAppState = appState => ({ type: constants.SET_APP_STATE, appState });
 
-export const publicActions = {
+const publicActions = {
   initRequest
 };
+
+export default publicActions;

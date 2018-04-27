@@ -2,6 +2,33 @@
 
 A helper module to manage app state (active/inactive) in Redux.
 
+## Module Public Interfaces
+
+### Constants
+
+```javascript
+import { constants as appStateConstants } from 'mobile-rn-app-state'
+
+// appStateConstants.NAME - this constant will be used later in app root reducer and module selectors
+// appStateConstants.ON_APP_STATE_CHANGE - subscribe to this action type if you want to be notified when app is resumed or suspended
+```
+
+### Action Creators
+
+```javascript
+import { actions as appStateActions } from 'mobile-rn-app-state'
+
+// appStateActions.initRequest() - dispatch this action on app launch to initialize the module
+```
+
+### Selectors
+```javascript
+import { selectors as appStateSelectors } from 'mobile-rn-app-state'
+
+// appStateSelectors.isActive() - returns true when app is resumed (active); otherwise returns false
+// appStateSelectors.getAppState() - returns one of null|active|background|inactive (see React Native AppState module for details)
+```
+
 ## Getting started
 
 ### Install mobile-rn-app-state
