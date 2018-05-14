@@ -19,7 +19,7 @@ function* _onAppError(action) {
   yield call(alert, action.title, action.message);
 }
 
-export function* watchOnRestorePurchasesError() {
+export function* watchOnAppError() {
   yield takeLatest(ON_APP_ERROR, _onAppError);
 }
 
