@@ -30,7 +30,7 @@ import { confirm } from 'mobile-rn-utils/alert';
 import { ON_DELETE_REQUEST } from './constants';
 
 function* _onDeleteRequest(action) {
-  console.log('----saga _onAppError saga----');
+  console.log('----saga _onDeleteRequest saga----');
 
   const isDeleteConfirmed = yield call(confirm, 'Delete', `Do you really want to delete ${action.name}?`);
   
@@ -39,7 +39,7 @@ function* _onDeleteRequest(action) {
   }
 }
 
-export function* watchOnRestorePurchasesError() {
+export function* watchOnDeleteRequest() {
   yield takeLatest(ON_DELETE_REQUEST, _onDeleteRequest);
 }
 ```
