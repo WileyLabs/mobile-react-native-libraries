@@ -20,16 +20,6 @@ alert - a helper module for redux-saga; it wraps react native [Alert.alert()](ht
 
 ### `import { alert, confirm } from 'mobile-rn-utils/alert'`
 
-### alert API
-
-### `alert(title: string, message: string, okButtonTitle?: string = 'OK'): Promise<void>`
-
-Displays react native Alert.alert() with given title, message, and one 'positive' button. Returns nothing.
-
-### `confirm(title: string, message: string, confirmButtonTitle?: string = 'OK', cancelButtonTitle?: string = 'Cancel'): Promise<boolean>`
-
-Displays react native Alert.alert() with given title, message, and two buttons (one 'positive' and one 'negative'). If user press 'positive' button, returns true. Otherwise returns false.
-
 ```javascript
 // Example 1 - alert() usage in saga
 //
@@ -67,3 +57,13 @@ export function* watchOnDeleteRequest() {
   yield takeLatest(ON_DELETE_REQUEST, _onDeleteRequest);
 }
 ```
+
+### alert API
+
+### `alert(title: string, message: string, okButtonTitle?: string = 'OK'): Promise<void>`
+
+Displays react native Alert.alert() with given title, message, and one 'positive' button. Returns nothing.
+
+### `confirm(title: string, message: string, confirmButtonTitle?: string = 'OK', cancelButtonTitle?: string = 'Cancel'): Promise<boolean>`
+
+Displays react native Alert.alert() with given title, message, and two buttons (one 'positive' and one 'negative'). If user press 'positive' button, returns true. Otherwise returns false.
