@@ -11,6 +11,10 @@ export function getField(object, path, defaultValue) {
   }
 }
 
+export function putWithin(val, lo, hi) {
+  return val < lo ? lo : (val > hi) ? hi : val;
+}
+
 function isString(s) {
   return s !== undefined && (typeof (s) === 'string' || s instanceof String);
 }
@@ -25,17 +29,6 @@ export function isDefined(value, path = undefined) {
   return !(field === undefined || field === null);
 }
 
-// Adds message to the error
-export function buildErrorWithMessage(errCode, message) {
-  return isDefined(message) ? { errCode, details: { error: (new Error(message)) } } :
-                              { errCode, details: { error: (new Error('Error [' + errCode + ']')) } };
-}
-
-// Gets message from the error
-export function getErrorMessage(error) {
-  return getField(error, 'details.error.message', 'Error [' + error.errCode + ']');
-}
-
 // Sleeps for 'milliseconds'
 export function sleep(milliseconds) {
   var start = new Date().getTime();
@@ -46,12 +39,23 @@ export function sleep(milliseconds) {
   }
 }
 
+// Builds mobile-rn error
+export function buildError(errCode, error = new Error(), details = {}) {
+  return { errCode, details: { ...details, error }};
+}
+
+// Gets message from the error
+export function getErrorMessage(error) {
+  return getField(error, 'details.error.message', 'Error ' + error.errCode);
+}
+
 export const helpers = {
   getField,
+  putWithin,
   isDefined,
-  buildErrorWithMessage,
-  getErrorMessage,
-  sleep
+  sleep,
+  buildError,
+  getErrorMessage
 };
 
 export default helpers;

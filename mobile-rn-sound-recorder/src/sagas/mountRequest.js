@@ -58,8 +58,7 @@ function* _mountRequest(action) {
   yield put(actions.setState({ hasPermission }));
 
   if (!hasPermission) {
-    const error = helpers.buildErrorWithMessage(constants.ERROR_NOT_PERMITTED, 'No recording permissions granted');
-    yield put(actions.onError(error.errCode, error.details));
+    yield put(actions.onError(helpers.buildError(constants.ERROR_NOT_PERMITTED, new Error('No recording permissions granted'))));
     return;
   }
 

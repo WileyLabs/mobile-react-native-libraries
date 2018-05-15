@@ -11,7 +11,6 @@ import { helpers, fs, generate, logging } from '../utils';
  * @param userData user data object (optinal, passed as a payload with onRecordingSaved action)
  */
 function* _saveAsFileRequest(action) {
-
   if (constants.DEBUG_OUTPUT) {
     logging.log({action});
   }
@@ -25,16 +24,15 @@ function* _saveAsFileRequest(action) {
   const info = yield select(selectors.getInfo);
 
   info.name = (action.fileInfo.name === undefined ? generate.guid() : action.fileInfo.name) + '.' + state.audioSettings.AudioEncoding;
-  info.path = action.fileInfo.path === undefined ? fs.getDocumentFile() : action.fileInfo.path;
+  info.path = action.fileInfo.path === undefined ? fs.getDocumentFile() : fs.parsePath(action.fileInfo.path);
 
   const fileNamePath = fs.buildPath(info.path, info.name);
 
   // Move temporary file to the final location
-  const success  = yield fs.awaitMoveFile(state.recordingFile, fileNamePath);
+  const success  = yield fs.awaitMoveFile(state.recordingFile, fileNamePath, false);
 
   if (!success) {
-    const error = helpers.buildErrorWithMessage(constants.ERROR_FS, `File error (${fileNamePath})`);
-    yield put(actions.onError(error.errCode, error.details));
+    yield put(actions.onError(helpers.buildError(constants.ERROR_FS, new Error(`File error (${fileNamePath})`))));
   }
   else {
     info.userData = {...action.userData};

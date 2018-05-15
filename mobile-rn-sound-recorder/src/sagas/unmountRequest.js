@@ -16,8 +16,19 @@ function* _unmountRequest(action) {
   }
 
   // Cleanup temporary file(s)
-   yield fs.awaitDeleteFile((yield select(selectors.getState)).recordingFile);
+  yield fs.awaitDeleteFile((yield select(selectors.getState)).recordingFile);
 
+  // Reset all states
+  const state = { isMounted: false,
+    isRecording: false,
+    isReadyToSave: false,
+    currentTime: 0.0,
+    hasPermission: undefined,
+    error: constants.ERROR_NO_ERROR,
+    recordingFile: ''
+  };
+
+  yield put(actions.setState(state));
 }
 
 export function* watchUnmountRequest() {

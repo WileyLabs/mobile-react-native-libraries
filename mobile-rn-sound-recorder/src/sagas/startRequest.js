@@ -40,17 +40,15 @@ function* _verifyState() {
 
   // Verification failed
   const errors = [ { code: constants.ERROR_ALREADY_RUNNING, message: 'Recording already running' },
-                   { code: constants.ERROR_NOT_MOUNTED, message: 'Component in not initialized' },
+                   { code: constants.ERROR_NOT_MOUNTED, message: 'Component is not initialized' },
                    { code: constants.ERROR_NOT_PERMITTED, message: 'No recording permissions granted'}
                  ];
-  const error = helpers.buildErrorWithMessage(errors[index].code, errors[index].message);
-  yield put(actions.onError(error.errCode, error.details));
+  yield put(actions.onError(helpers.buildError(errors[index].code, new Error(errors[index].message))));
 
   return false;
 }
 
 function* _startRequest(action) {
-
   if (constants.DEBUG_OUTPUT) {
     logging.log({action});
   }
@@ -67,33 +65,35 @@ function* _startRequest(action) {
     yield call(AudioRecorder.startRecording);
 
     const channels = [ yield call(_createProgressChannel), yield call(_createVerificationChannel)];
-    let stop = false, currentTime = 0;
+    let currentTime = 0;
 
-    while (!stop) {
+    while (true) {
       let [ stopped, progress, verification ] = yield race([
         take(constants.STOP_REQUEST),
         take(channels[0]),
         take(channels[1])
       ]);
-      stop = stopped !== undefined;
-      if (!stop && (progress !== undefined)) {
+
+      if (stopped !== undefined) {
+        break;
+      }
+
+      if (progress !== undefined) {
         currentTime = progress.currentTime;
         yield put(actions.setCurrentTime(currentTime));
       }
-      if (!stop && (verification !== undefined)) {
+      else if (verification !== undefined) {
         if (currentTime < 1.0) {
-          const error = helpers.buildErrorWithMessage(constants.ERROR_RECORDING, 'Verify recording options and file path');
-          yield put(actions.onError(error.errCode, error.details));
+          yield put(actions.onError(helpers.buildError(constants.ERROR_RECORDING, new Error('Verify recording options and file path'))));
           yield put(actions.stopRequest(false));
-          stop = true;
+          break;
         }
       }
     }
     channels.forEach(channel => channel.close());
   }
   catch (err) {
-    const error = helpers.buildErrorWithMessage(constants.ERROR_RECORDING, err.message);
-    yield put(actions.onError(error.errCode, error.details));
+    yield put(actions.onError(helpers.buildError(constants.ERROR_RECORDING, new Error(err.message))));
     yield put(actions.setState({ isRecording: false, isReadyToSave: false, currentTime: 0.0 }));
   }
 

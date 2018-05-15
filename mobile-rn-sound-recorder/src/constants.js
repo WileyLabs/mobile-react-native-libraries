@@ -1,8 +1,13 @@
-import { Dictionary } from './utils.js';
+import { Dictionary, fs } from './utils.js';
 
 // Public Constants
 
 export const NAME = 'soundRecorder';
+
+export const PATH_BUNDLE = fs.PATH_BUNDLE;
+export const PATH_DOCUMENT = fs.PATH_DOCUMENT;
+export const PATH_DATA = fs.PATH_DATA;
+export const PATH_TEMP = fs.PATH_TEMP;
 
 // Public Notification Events
 
@@ -22,6 +27,10 @@ export const ERROR_FS               = -5;   // 'File system error'
 
 export const publicConstants = {
   NAME,                   // component name
+  PATH_BUNDLE,            // path to main bundle
+  PATH_DOCUMENT,          // path to document folder
+  PATH_DATA,              // path to data folder
+  PATH_TEMP,              // path to temporary folder
   ON_ERROR,               // error notification
   ON_RECORDING_SAVED,     // recording file saved notification
   ERROR_NOT_PERMITTED,    // recording audio is not permitted for application
