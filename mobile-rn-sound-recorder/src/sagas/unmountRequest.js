@@ -6,7 +6,7 @@ import { logging, fs } from '../utils';
 
 function* _unmountRequest(action) {
 
-  if (constants.DEBUG_OUTPUT) {
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 
@@ -18,14 +18,15 @@ function* _unmountRequest(action) {
   // Cleanup temporary file(s)
   yield fs.awaitDeleteFile((yield select(selectors.getState)).recordingFile);
 
-  // Reset all states
+  // Reset states
   const state = { isMounted: false,
     isRecording: false,
     isReadyToSave: false,
     currentTime: 0.0,
     hasPermission: undefined,
     error: constants.ERROR_NO_ERROR,
-    recordingFile: ''
+    recordingFile: '',
+    options: { logLevel: constants.LOG_LEVEL }
   };
 
   yield put(actions.setState(state));

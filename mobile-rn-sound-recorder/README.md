@@ -3,7 +3,7 @@
 A helper module to record voice audio in Redux.
 Redux/Saga wrapper for react-native-audio component.
 
-Version 0.0.2
+Version 0.0.3
 
 ## Module Public Interfaces
 
@@ -50,6 +50,7 @@ Init/Shut
  * @param options.audioSettings audio settings (optinal, see iosAudioSettings, androidAudioSettings constants for details)
  * @param options.lang language 'eng' or 'ger' (optinal, by default 'eng')
  * @param options.wordsMap words Map(key, value) (optinal, used for PermissionsAndroid.request)
+ * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
  */
 const mountRequest = (options) => ({ type: constants.MOUNT_REQUEST, options });
 
@@ -260,7 +261,8 @@ class VoiceRecorder extends Component {
   componentDidMount() {
     // Optional wordsMap allows to re-write default PermissionAndroid texts
     // const wordsMap = new Map([['titleMicrophonePermission', 'Permission...']]);
-    // e.g. this.props.onMount({ lang: 'ger', wordsMap });
+    // logLevel allows to switch on recording logging
+    // e.g. this.props.onMount({ lang: 'ger', wordsMap, logLevel: 1 });
     this.props.mountRequest({lang: 'ger'});
   }
 

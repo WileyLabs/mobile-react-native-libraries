@@ -1,4 +1,6 @@
 import { NAME } from './constants';
+import { helpers } from './utils';
+import * as constants from './constants';
 
 // Public Selectors
 export const hasPermission = (state) => state[NAME].hasPermission;
@@ -31,3 +33,4 @@ export default publicSelectors;
 
 // Returns state
 export const getState = (state) => state[NAME];
+export const getLogLevel = (state) => helpers.getField(state[NAME].options, 'logLevel', constants.LOG_LEVEL);

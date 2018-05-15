@@ -11,7 +11,8 @@ import { helpers, fs, generate, logging } from '../utils';
  * @param userData user data object (optinal, passed as a payload with onRecordingSaved action)
  */
 function* _saveAsFileRequest(action) {
-  if (constants.DEBUG_OUTPUT) {
+
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 

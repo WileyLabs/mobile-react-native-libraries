@@ -16,7 +16,7 @@ async function _checkPermission(state) {
   };
   return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
     .then((result) => {
-      if (constants.DEBUG_OUTPUT) {
+      if (state.options.logLevel > 0) {
         console.log('Permission result:', result);
       }
       return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
@@ -31,7 +31,7 @@ async function _checkPermission(state) {
 */
 function* _mountRequest(action) {
 
-  if (constants.DEBUG_OUTPUT) {
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 
@@ -42,7 +42,8 @@ function* _mountRequest(action) {
                   currentTime: 0.0,
                   hasPermission: undefined,
                   error: constants.ERROR_NO_ERROR,
-                  recordingFile: ''
+                  recordingFile: '',
+                  options: {...action.options}
   };
 
   yield put(actions.setState(state));

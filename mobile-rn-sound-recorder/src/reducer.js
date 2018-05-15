@@ -19,18 +19,19 @@ const initialState = {
   currentTime: 0.0,           // current recording time (isRecording: true)
   error: { errCode: constants.ERROR_NO_ERROR, details: {} },    // last error { errCode, details: {} }
   recordingFile: '',          // temporary file name for current recording
-  dictionary: undefined       // dictionary (user-defined or default)
+  dictionary: undefined,      // dictionary (user-defined or default)
+  options: { updateFrequency: constants.DEFAULT_UPDATE_MS, logLevel: 0 }
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case constants.SET_STATE:
-      if (constants.DEBUG_OUTPUT) {
+    if (state.options.logLevel > 1) {
         logging.deb({action});
       }
       return { ...state, ...action.params };
     case constants.SET_INFO:
-      if (constants.DEBUG_OUTPUT) {
+    if (state.options.logLevel > 1) {
         logging.deb({action});
       }
       return { ...state, info: action.info };

@@ -49,7 +49,8 @@ function* _verifyState() {
 }
 
 function* _startRequest(action) {
-  if (constants.DEBUG_OUTPUT) {
+
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 

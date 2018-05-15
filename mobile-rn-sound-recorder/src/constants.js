@@ -55,7 +55,7 @@ export const SAVE_AS_FILE_REQUEST = 'soundRecorder/SAVE_AS_FILE_REQUEST';
 
 // Private Constants
 
-export const DEBUG_OUTPUT = false;
+export const LOG_LEVEL = 0;        // output debug information: 0 - no, 1, 2 - wordy logging
 
 export const iosAudioSettings = {
   SampleRate: 22050,

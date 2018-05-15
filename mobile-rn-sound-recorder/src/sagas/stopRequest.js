@@ -7,7 +7,7 @@ import { fs, logging } from '../utils';
 
 function* _stopRequest(action) {
 
-  if (constants.DEBUG_OUTPUT) {
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 
