@@ -9,7 +9,7 @@ Version 0.0.3
 
 ### Constants
 
-```javascript
+```
 import { constants as soundRecorderConstants } from 'mobile-rn-sound-recorder'
 
 General:
@@ -40,7 +40,7 @@ Error codes:
 
 ### Action Creators
 
-```javascript
+```
 import { actions as soundRecorderActions } from 'mobile-rn-sound-recorder'
  
 Init/Shut
@@ -88,7 +88,7 @@ const saveAsFileRequest = (fileInfo, userData) => ({
 ```
 
 ### Selectors
-```javascript
+```
 import { selectors as soundRecorderSelectors } from 'mobile-rn-sound-recorder'
 
 soundRecorderSelectors.hasPermission()    - true if the application acquired microphone permission
