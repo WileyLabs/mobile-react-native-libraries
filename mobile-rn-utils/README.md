@@ -2,9 +2,23 @@
 
 A collection of helper modules for react native applications.
 
+# Installation
+
+```bash
+yarn add mobile-rn-utils
+```
+or
+```bash
+npm install mobile-rn-utils --save
+```
+
 ## alert
 
 alert - a helper module for redux-saga; it wraps react native [Alert.alert()](https://facebook.github.io/react-native/docs/alert.html) to use within sagas (generator functions). It exports two functions: alert() and confirm().
+
+### alert Usage
+
+### `import { alert, confirm } from 'mobile-rn-utils/alert'`
 
 ### alert API
 
@@ -14,7 +28,7 @@ Displays react native Alert.alert() with given title, message, and one 'positive
 
 ### `confirm(title: string, message: string, confirmButtonTitle?: string = 'OK', cancelButtonTitle?: string = 'Cancel'): Promise<boolean>`
 
-Displays react native Alert.alert() with given title, message, and two buttons (one 'positive' and one 'negative'. If user press 'positive' button, returns true. Otherwise returns false.
+Displays react native Alert.alert() with given title, message, and two buttons (one 'positive' and one 'negative'). If user press 'positive' button, returns true. Otherwise returns false.
 
 ```javascript
 // Example 1 - alert() usage in saga
