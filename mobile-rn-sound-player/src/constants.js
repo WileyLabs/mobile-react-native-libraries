@@ -48,10 +48,17 @@ export const RESET_REQUEST      = 'soundPlayer/RESET_REQUEST';
 export const SET_POS_REQUEST    = 'soundPlayer/SET_POS_REQUEST';
 
 // Private Constants
-export const DEBUG_OUTPUT = false;          // output debug information
-export const CURRENT_TIME_UPDATE_MS = 250;  // ms period of requesting current time
+export const LOG_LEVEL = 0;                 // output debug information: 0 - no, 1, 2 - wordy
+export const DEFAULT_UPDATE_MS = 250;       // ms period of requesting current time
 
 // Private Constants for Reducer
 export const SET_STATE          = 'soundPlayer/SET_STATE';
 export const SET_INFO           = 'soundPlayer/SET_INFO';
 export const SET_CURRENT_TIME   = 'soundPlayer/SET_CURRENT_TIME';
+
+export const defaultInfo = {
+  uri: '',                    // file uri
+  basePath: '',               // base path (if applicable)
+  size: 0.0,                  // file size in bytes
+  duration: 0.0               // sound duration in secs
+};

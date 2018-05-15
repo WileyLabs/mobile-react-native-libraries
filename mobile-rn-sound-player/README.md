@@ -2,7 +2,7 @@
 
 Redux/Saga wrapper for react-native-sound component.
 
-Version 0.0.2
+Version 0.0.3
 
 ## Module Public Interfaces
 
@@ -31,20 +31,21 @@ Error codes:
   ERROR_NOT_MOUNTED       - component was not properly initialized (call mountRequest first)
   ERROR_SOURCE_URI        - Sound source is either not specified or not accessible 
                             (details: { uri, basePath})
-  ERROR_PLAYBACK       `   - generic playback error
+  ERROR_PLAYBACK          - generic playback error
 
 ```
 
 ### Action Creators
 
-```javascript
+```
 import { actions as soundPlayerActions } from 'mobile-rn-sound-player'
  
 Init/Shut
 
 /**
  * Initializes component (should be called first)
- * @param options reserved
+ * @param options.updateFrequency update period for current pos in ms
+ * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
  */
 const mountRequest = (options) => ({ type: constants.MOUNT_REQUEST, options });
 
@@ -98,6 +99,7 @@ soundPlayerSelectors.isPlaying()        - true if playback is in progress (betwe
 soundPlayerSelectors.isPaused()         - true if playback is paused (isPlaying is 'true')
 soundPlayerSelectors.getCurrentTime()   - current time in secs [Real Number]
 soundPlayerSelectors.getInfo()          - descriptor of the last loaded sound *
+soundPlayerSelectors.getDuration()      - duration in secs of the last loaded sound
 soundPlayerSelectors.getError()         - last error **
 
 // * Info object:
@@ -231,7 +233,8 @@ class VoicePlayer extends Component {
   };
 
   componentDidMount() {
-    this.props.mountRequest();
+    const options = { updateFrequency: 150, logLevel: 1 }; // optional
+    this.props.mountRequest(options);
   }
 
   componentWillUnmount() {

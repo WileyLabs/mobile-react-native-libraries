@@ -5,7 +5,8 @@ import * as selectors from '../selectors';
 import { logging, helpers } from '../utils';
 
 function* _pauseRequest(action) {
-  if (constants.DEBUG_OUTPUT) {
+
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 

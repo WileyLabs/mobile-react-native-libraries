@@ -8,9 +8,10 @@ import { helpers, logging, fs, publicUtils as utils } from '../utils';
 import Sound from 'react-native-sound';
 
 // Creates channel for update progress (state.currentTime)
-function _createProgressChannel(sound) {
+function _createProgressChannel(sound, componentOptions) {
   return eventChannel(emitter => {
-    const interval = setInterval(() => sound.getCurrentTime(seconds => emitter(seconds)), constants.CURRENT_TIME_UPDATE_MS);
+    const updateFrequency = helpers.getField(componentOptions, 'updateFrequency', constants.DEFAULT_UPDATE_MS);
+    const interval = setInterval(() => sound.getCurrentTime(seconds => emitter(seconds)), updateFrequency);
     return () => { clearTimeout(interval); };
   });
 }
@@ -72,7 +73,8 @@ function* _verifyState(action) {
 
 // Starts request
 function* _startRequest(action) {
-  if (constants.DEBUG_OUTPUT) {
+
+  if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
   }
 
@@ -102,9 +104,12 @@ function* _startRequest(action) {
       throw new Error('Cannot load sound from ' + utils.getSourceUri(info));
     }
 
+    const state = yield select(selectors.getState);
+    const componentOptions = state.options;
+
     const channels = [
       yield call(_createPlaybackChannel, sound),
-      yield call(_createProgressChannel, sound),
+      yield call(_createProgressChannel, sound, componentOptions),
       yield call(_createAutoResetChannel, sound, options)
     ];
 
@@ -113,7 +118,6 @@ function* _startRequest(action) {
       throw new Error('Cannot start playback of ' + utils.getSourceUri(info));
     }
 
-    const state = yield select(selectors.getState);
     let started = false, isPaused = options.paused, updateCurrentTime = true;
 
     state.info.duration = duration;
