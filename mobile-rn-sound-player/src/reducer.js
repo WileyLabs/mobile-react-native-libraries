@@ -2,7 +2,7 @@ import * as constants from './constants';
 import { logging } from './utils';
 
 export const defaultInfo = {
-  url: '',                    // file url
+  uri: '',                    // file uri
   basePath: '',               // base path (if applicable)
   size: 0.0,                  // file size in bytes
   duration: 0.0               // sound duration in secs

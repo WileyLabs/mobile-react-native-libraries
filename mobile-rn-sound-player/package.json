@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-sound-player",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A helper module to play sound in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",

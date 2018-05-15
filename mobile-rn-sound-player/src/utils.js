@@ -17,9 +17,9 @@ export {
   Dictionary
 };
 
-export const getSourceUrl = (info) => {
+export const getSourceUri = (info) => {
   try {
-    return helpers.isDefined(info.basePath) ? fs.buildPath(info.basePath, info.url) : info.url;
+    return helpers.isDefined(info.basePath) ? fs.buildPath(info.basePath, info.uri) : info.uri;
   }
   catch (err) {
   }
@@ -28,7 +28,7 @@ export const getSourceUrl = (info) => {
 
 // functions
 export const publicUtils = {
-  getSourceUrl
+  getSourceUri
 };
 
 export default publicUtils;

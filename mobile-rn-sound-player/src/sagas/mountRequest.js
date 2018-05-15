@@ -2,7 +2,6 @@ import { put, takeEvery } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import { logging, helpers } from '../utils';
-
 import Sound from 'react-native-sound';
 
 /**

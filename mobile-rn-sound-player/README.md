@@ -2,13 +2,13 @@
 
 Redux/Saga wrapper for react-native-sound component.
 
-Version 0.0.1
+Version 0.0.2
 
 ## Module Public Interfaces
 
 ### Constants
 
-```javascript
+```
 import { constants as soundPlayerConstants } from 'mobile-rn-sound-player'
 
 General:
@@ -29,8 +29,8 @@ Notification actions:
 Error codes:
 
   ERROR_NOT_MOUNTED       - component was not properly initialized (call mountRequest first)
-  ERROR_SOURCE_URL        - Sound source is either not specified or not accessible 
-                            (details: { url, basePath})
+  ERROR_SOURCE_URI        - Sound source is either not specified or not accessible 
+                            (details: { uri, basePath})
   ERROR_PLAYBACK       `   - generic playback error
 
 ```
@@ -57,7 +57,7 @@ Start/Stop/Pause/Set Position
 
 /**
  * Starts playback
- * @param source.url sound file name or http url (required)
+ * @param source.uri sound file name or http uri (required)
  * @param source.basePath file path (if applicable, may contain special path PATH_(...))
  * @param options.paused initial paused state (by default isPaused = false)
  * @param options.repeat repetition counter (-1 for infinite loop, 1 by default)
@@ -90,7 +90,7 @@ const setPosRequest = (pos = 0.0) => ({ type: constants.SET_POS_REQUEST, pos });
 ```
 
 ### Selectors
-```javascript
+```
 import { selectors as soundPlayerSelectors } from 'mobile-rn-sound-player'
 
 soundPlayerSelectors.isMounted()        - true if component is ready for recording (mounted)
@@ -103,7 +103,7 @@ soundPlayerSelectors.getError()         - last error **
 // * Info object:
 
   const defaultInfo = {
-    url: '',                    // file url
+    uri: '',                    // file uri
     basePath: '',               // base path (if applicable)
     size: 0.0,                  // file size in bytes, -1 for http source
     duration: 0.0               // sound duration in secs (if available)
@@ -242,7 +242,7 @@ class VoicePlayer extends Component {
 
   handleStart = () => {
     const source = { 
-      url: fileName,                                // file name w/o path
+      uri: fileName,                                // file name w/o path
       basePath: soundPlayerConstants.PATH_DOCUMENT  // base path (Documents)
     };
     this.props.startRequest(source);
@@ -277,9 +277,9 @@ function* _onSoundError(action) {
   try {
     const { errCode, details } = action.error;
     switch (errCode) {
-      case soundPlayerConstants.ERROR_SOURCE_URL:
+      case soundPlayerConstants.ERROR_SOURCE_URI:
         Alert.alert('Attention',
-                    `Sound source is either not found or not accessible (${details.url})`,
+                    `Sound source is either not found or not accessible (${details.uri})`,
                     [{text: 'OK'}], { cancelable: false });
         break;
     }

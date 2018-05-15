@@ -17,7 +17,7 @@ export const ON_ERROR           = 'soundPlayer/ON_ERROR';
 // Public Errors
 export const ERROR_NO_ERROR           =  0;   // [private]
 export const ERROR_NOT_MOUNTED        = -1;   // Component not mounted
-export const ERROR_SOURCE_URL         = -2;   // Sound source (url and/or basePath) is either not specified or not accessible
+export const ERROR_SOURCE_URI         = -2;   // Sound source (uri and/or basePath) is either not specified or not accessible
 export const ERROR_PLAYBACK           = -3;   // Playback error
 
 // Exported Public Constants
@@ -29,7 +29,7 @@ export const publicConstants = {
   PATH_TEMP,                // path to temporary folder
   ON_ERROR,                 // error notification
   ERROR_NOT_MOUNTED,        // component was not properly initialized (call mountRequest first)
-  ERROR_SOURCE_URL,         // cannot find sound source (details: { url, basePath})
+  ERROR_SOURCE_URI,         // cannot find sound source (details: { uri, basePath})
   ERROR_PLAYBACK            // generic playback error
 };
 

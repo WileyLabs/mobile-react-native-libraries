@@ -15,7 +15,7 @@ export const unmountRequest = () => ({ type: constants.UNMOUNT_REQUEST });
 
 /**
  * Starts playback
- * @param source.url sound file name or http url (required)
+ * @param source.uri sound file name or http uri (required)
  * @param source.basePath file path (if applicable)
  * @param options.paused initial paused state (by default isPaused = false)
  * @param options.repeat repetition counter (-1 for infinite loop, 1 by default)

@@ -7,7 +7,7 @@ import { helpers, logging, fs, publicUtils as utils } from '../utils';
 
 import Sound from 'react-native-sound';
 
-// Creates channel for listening AudioRecorder notification onProgress
+// Creates channel for update progress (state.currentTime)
 function _createProgressChannel(sound) {
   return eventChannel(emitter => {
     const interval = setInterval(() => sound.getCurrentTime(seconds => emitter(seconds)), constants.CURRENT_TIME_UPDATE_MS);
@@ -18,9 +18,9 @@ function _createProgressChannel(sound) {
 // Creates start channel
 // these timeouts are a hacky workaround for some issues with react-native-sound.
 // see https://github.com/zmxv/react-native-sound/issues/89.
-function _createLoadSoundChannel(url, basePath = '') {
+function _createLoadSoundChannel(uri, basePath = '') {
   return eventChannel(emitter => {
-    const timeout = setTimeout(() => { const sound = new Sound(url, basePath, (error) => emitter(sound) ); }, 100);
+    const timeout = setTimeout(() => { const sound = new Sound(uri, basePath, (error) => emitter(sound) ); }, 100);
     return () => { clearTimeout(timeout); };
   });
 }
@@ -52,10 +52,10 @@ function _createAutoResetChannel(sound, options) {
   });
 }
 
-// Verifies current State before recording starts, returns true if State is OK, false otherwise
+// Verifies current State before playback starts, returns true if State is OK, false otherwise
 function* _verifyState(action) {
   const verify = [ yield select(selectors.isMounted),                  // Component should be mounted
-                   helpers.isDefined(action.source.url)                // Url should be specified
+                   helpers.isDefined(action.source.uri)                // Uri should be specified
                  ];
   const index = verify.indexOf(false);
   if (index < 0) {
@@ -63,7 +63,7 @@ function* _verifyState(action) {
   }
   // Verification failed
   const errors = [ { code: constants.ERROR_NOT_MOUNTED, message: 'Component is not initialized' },
-                   { code: constants.ERROR_SOURCE_URL, message: 'Source url is not specified' }
+                   { code: constants.ERROR_SOURCE_URI, message: 'Sound uri is not specified' }
                  ];
   yield put(actions.onError(helpers.buildError(errors[index].code, new Error(errors[index].message))));
 
@@ -82,23 +82,24 @@ function* _startRequest(action) {
 
   yield put(actions.resetRequest());
 
-  let { url, basePath } = action.source;
-  basePath = fs.parsePath(basePath);
+  let { uri, basePath } = action.source;
 
-  const info = { ...constants.defaultInfo, url, basePath };
+  basePath = fs.parsePath(basePath);  // parse special chars in path
+
+  const info = { ...constants.defaultInfo, uri, basePath };
   const { options } = action;
   let errCode = constants.ERROR_PLAYBACK;
 
   yield put(actions.setState({ isPlaying: true, isPaused: false, currentTime: 0.0, error: '', info }));
 
   try {
-    const loadChannel = yield call(_createLoadSoundChannel, url, basePath); // load sound
+    const loadChannel = yield call(_createLoadSoundChannel, uri, basePath); // load sound
     const sound = yield take(loadChannel);
     const duration = sound.getDuration();
     loadChannel.close();
     if (duration === -1) {
-      errCode = constants.ERROR_SOURCE_URL;
-      throw new Error('Cannot load sound from ' + utils.getSourceUrl(info));
+      errCode = constants.ERROR_SOURCE_URI;
+      throw new Error('Cannot load sound from ' + utils.getSourceUri(info));
     }
 
     const channels = [
@@ -108,15 +109,15 @@ function* _startRequest(action) {
     ];
 
     if (!(yield take(channels[0]))) { // start playback
-      errCode = constants.ERROR_SOURCE_URL;
-      throw new Error('Cannot start playback of ' + utils.getSourceUrl(info));
+      errCode = constants.ERROR_SOURCE_URI;
+      throw new Error('Cannot start playback of ' + utils.getSourceUri(info));
     }
 
     const state = yield select(selectors.getState);
     let started = false, isPaused = options.paused, updateCurrentTime = true;
 
     state.info.duration = duration;
-    state.info.size = (yield fs.awaitGetFileStats(fs.buildPath(basePath, url))).size; // -1 for http source
+    state.info.size = (yield fs.awaitGetFileStats(fs.buildPath(basePath, uri))).size; // -1 for http source
     state.sound = sound;
 
     yield put(actions.setState(state));
@@ -181,7 +182,7 @@ function* _startRequest(action) {
     channels.forEach(channel => channel.close());
   }
   catch (err) {
-    yield put(actions.onError(helpers.buildError(errCode, err, { url, basePath })));
+    yield put(actions.onError(helpers.buildError(errCode, err, { uri, basePath })));
     yield put(actions.resetRequest());
   }
 
