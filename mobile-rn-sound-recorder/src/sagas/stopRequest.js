@@ -25,7 +25,7 @@ function* _stopRequest(action) {
     const filePath = (yield select(selectors.getState)).recordingFile;
     yield call(AudioRecorder.stopRecording);
     const stats = yield call(fs.awaitGetFileStats, filePath);
-    isReadyToSave = (stats !== undefined) && (stats.size > 0);
+    isReadyToSave = stats.size > 0;
     if (isReadyToSave) {
       duration = yield select(selectors.getCurrentTime);
       size = stats.size;

@@ -22,6 +22,7 @@ export const startRequest = () => ({ type: constants.START_REQUEST });
 
 /**
  * Ends recording
+ * @param success false if stopped by error, true otherwise (true by default)
  */
 export const stopRequest = (success = true) => ({ type: constants.STOP_REQUEST, success });
 
@@ -31,7 +32,11 @@ export const stopRequest = (success = true) => ({ type: constants.STOP_REQUEST, 
  * @param fileInfo.path file path (optinal, by default DocumentPath)
  * @param userData user data object (optinal, passed as a payload with onFileSaved action)
  */
-export const saveAsFileRequest = (fileInfo, userData) => ({ type: constants.SAVE_AS_FILE_REQUEST, fileInfo, userData });
+export const saveAsFileRequest = (fileInfo, userData) => ({
+  type: constants.SAVE_AS_FILE_REQUEST,
+  fileInfo,
+  userData
+});
 
 // Exported Public Actions
 
@@ -50,7 +55,7 @@ export default publicActions;
 
 // Private Action Creators for Notification
 
-export const onError = (errCode, details) => ({ type: constants.ON_ERROR, errCode, details }); // see email 'Proposals on error handling' for details
+export const onError = (error) => ({ type: constants.ON_ERROR, error });
 export const onRecordingSaved = info => ({ type: constants.ON_RECORDING_SAVED, info });
 
 // Private Action Creators for Reducer

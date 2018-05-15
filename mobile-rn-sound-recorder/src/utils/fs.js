@@ -1,14 +1,33 @@
 import { Platform } from 'react-native';
 import RNFS from 'react-native-fs';
 import { logging as console } from './logging.js';
+import { helpers } from './helpers.js';
 
-// Returns composed path for 'path' & 'file'
-export function buildPath(path, file) {
-  let fullPath = (path === undefined || path.trim().length === 0) ? '' : path;
-  if (fullPath.endsWith('/')) {
-    fullPath = fullPath.slice(0, fullPath.length - 1);
-  }
-  return fullPath.length ? ((file === undefined || file.trim().length === 0) ? fullPath : fullPath + '/' + file) : file;
+export const PATH_BUNDLE    = ':bundle';
+export const PATH_DOCUMENT  = ':document';
+export const PATH_TEMP      = ':temp';
+export const PATH_DATA      = ':data';
+
+// Parses special path names
+export function parsePath(path) {
+  const pathNames = [PATH_BUNDLE, PATH_DOCUMENT, PATH_DATA, PATH_TEMP];
+  const pathFuncs = [ fs.getBundleFile, fs.getDocumentFile, fs.getDataFile, fs.getTempFile ];
+  const index = pathNames.indexOf(path);
+  return index < 0 ? path : pathFuncs[index]();
+}
+
+// Builds path from arguments
+export function buildPath() {
+  return [...arguments].reduce((full, arg) => {
+    if (helpers.isDefined(arg)) {
+      let elem = parsePath(arg);
+      if (elem.endsWith('/')) {
+        elem = elem.slice(0, elem.length - 1);
+      }
+      full += helpers.isDefined(elem) ? ((full.length ? '/' : '') + elem) : '';
+    }
+    return full;
+  }, '' );
 }
 
 // Returns full path to the application bundle file (or bundle directory)
@@ -26,39 +45,60 @@ export function getTempFile(file) {
   return buildPath(Platform.OS === 'ios' ? RNFS.TemporaryDirectoryPath : RNFS.CachesDirectoryPath, file);
 }
 
-// Returns full path to the cache file
-export function getCacheFile(file) {
-  return buildPath(Platform.OS === 'ios' ? RNFS.CachesDirectoryPath : RNFS.DocumentDirectoryPath, file);
+// Returns full path to the data file
+export function getDataFile(file) {
+  return buildPath(Platform.OS === 'ios' ? RNFS.LibraryDirectoryPath + '/Data' : RNFS.DocumentDirectoryPath, file);
 }
 
 // Reads file information
+// @return RNFS file statistics object on success, { size: -1 } otherwise
 export async function awaitGetFileStats(name, silent = true) {
   return await RNFS.stat(name).catch(err => {
     if (!silent) {
       console.log(err.message);
     }
-    return undefined;
+    return { size: -1 }; // error reading file stats
   });
 }
 
 // Reads file, returns text on success, empty string otherwise
-export async function awaitReadFile(name) {
-  return await RNFS.readFile(name).catch(err => { console.log(err.message); return ''; });
+export async function awaitReadFile(name, silent = true) {
+  return await RNFS.readFile(name)
+    .catch(err => { if (!silent) {
+                      console.log(err.message);
+                    }
+                    return '';
+                  });
 }
 
 // Writes file, returns true on success, false otherwise
-export async function awaitWriteFile(name, data, encoding = 'utf8') {
-  return await RNFS.writeFile(name, data, encoding).then(success => true).catch(err => { console.log(err.message); return false; });
+export async function awaitWriteFile(name, data, encoding = 'utf8', silent = true) {
+  return await RNFS.writeFile(name, data, encoding).then(success => true)
+    .catch(err => { if (!silent) {
+                      console.log(err.message);
+                    }
+                    return false;
+                  });
 }
 
 // Copies file
-export async function awaitCopyFile(src, dst) {
-  return await RNFS.copyFile(src, dst).then(success => true).catch(err => { console.log(err.message); return false; });
+export async function awaitCopyFile(src, dst, silent = true) {
+  return await RNFS.copyFile(src, dst).then(success => true)
+    .catch(err => { if (!silent) {
+                      console.log(err.message);
+                    }
+                    return false;
+                  });
 }
 
 // Moves file
-export async function awaitMoveFile(src, dst) {
-  return await RNFS.moveFile(src, dst).then(success => true).catch(err => { console.log(err.message); return false; });
+export async function awaitMoveFile(src, dst, silent = true) {
+  return await RNFS.moveFile(src, dst).then(success => true)
+    .catch(err => { if (!silent) {
+                      console.log(err.message);
+                    }
+                    return false;
+                  });
 }
 
 export async function awaitDeleteFile(file, silent = true) {
@@ -91,10 +131,11 @@ export async function awaitReadBundleHtml(uri) {
 
 export const fs = {
   buildPath,
+  parsePath,
   getBundleFile,
   getDocumentFile,
   getTempFile,
-  getCacheFile,
+  getDataFile,
   awaitGetFileStats,
   awaitReadFile,
   awaitWriteFile,
@@ -102,7 +143,11 @@ export const fs = {
   awaitMoveFile,
   awaitDeleteFile,
   awaitReadBundleFile,
-  awaitReadBundleHtml
+  awaitReadBundleHtml,
+  PATH_BUNDLE,
+  PATH_DOCUMENT,
+  PATH_DATA,
+  PATH_TEMP
 };
 
 export default fs;

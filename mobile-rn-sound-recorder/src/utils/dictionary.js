@@ -80,9 +80,9 @@ export class Dictionary {
     try {
       const values = [];
       for (let key of this.data.keys()) {
-        values.push('[' + key + ' => ' + this.data.get(key) + ']');
+        values.push('[' + key + ': ' + this.data.get(key) + ']');
       }
-      const lang = `lang: ${this.lang}; data(${values.length}): `;
+      const lang = `lang: ${this.lang}; data (${values.length}): `;
       return lang + values.join(', ');
     }
     catch (err) {
