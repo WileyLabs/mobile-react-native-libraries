@@ -67,3 +67,68 @@ Displays react native Alert.alert() with given title, message, and one 'positive
 ### `confirm(title: string, message: string, confirmButtonTitle?: string = 'OK', cancelButtonTitle?: string = 'Cancel'): Promise<boolean>`
 
 Displays react native Alert.alert() with given title, message, and two buttons (one 'positive' and one 'negative'). If user press 'positive' button, returns true. Otherwise returns false.
+
+## constants
+
+constants - a collection of useful constants
+
+### constants Usage
+
+```javascript
+import { isAndroid } from 'mobile-rn-utils/constants'
+
+if (isAndroid) {
+  // Android specific rendering goes here
+}
+```
+
+### constants API
+
+- `isAndroid: string` true if device is Android
+- `isIOS: string` true if iOS device
+- `deviceWidth: number` Device screen width (does not depend on the current device orientation)
+- `deviceHeight: number` Device screen height (does not depend on the current device orientation)
+- `isSmallScreen: boolean` true if device has small screen
+- `isShortScreen: boolean` true is device has short screen
+- `monospaceFontFamily: string` "Courier" font family on iOS and 'monospace" font family on Android
+- `baselineDeviceWidth: number` iPhone 5 screen width
+- `baselineDeviceHeight: number` iPhone 5 screen height
+
+## scaleUtils
+
+scaleUtils - a collection of helper functions for responsive UI
+
+### scaleUtils Usage
+
+### `import { scale, verticalScale, moderateScale, widthFromPercentage, heightFromPercentage } from 'mobile-rn-utils/scaleUtils'`
+
+```javascript
+  const responsiveWidth = scale(60);
+  const responsiveHeight = verticalScale(120);
+  const padding = moderateScale(5);
+
+  const width = widthFromPercentage('95%');
+  const height = heightFromPercentage('33%');
+```
+
+### scaleUtils API
+
+### `scale(size: number): number`
+
+Scale input parameter size based on the current device screen width.
+
+### `verticalScale(size: number): number`
+
+Scale input parameter size based on the current device screen height.
+
+### `moderateScale(size: number, factor: number = 0.5): number`
+
+Scale input parameter based on the current device screen width and additionally provided scale factor
+
+### `widthFromPercentage(widthInPercent: string): number`
+
+Translate given width in percent to width in pixels
+
+### `heightFromPercentage(heightInPercent: string): number`
+
+Translate given height in percent to height in pixels
