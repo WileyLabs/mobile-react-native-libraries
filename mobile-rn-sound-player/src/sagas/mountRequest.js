@@ -7,6 +7,8 @@ import Sound from 'react-native-sound';
 
 /**
  * Initialize (Mount) Component
+ * @param options.updateFrequency update period for current pos in ms
+ * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
 */
 function* _mountRequest(action) {
 
@@ -15,7 +17,8 @@ function* _mountRequest(action) {
   }
 
   const stateUpdate = { isMounted: false, isPlaying: false, isPaused: false,
-                        currentTime: 0.0, error: constants.ERROR_NO_ERROR,
+                        currentTime: 0.0, volume: { mute: false, level: 1.0 },
+                        error: constants.ERROR_NO_ERROR,
                         options: {...action.options}};
   yield put(actions.setState(stateUpdate));
 

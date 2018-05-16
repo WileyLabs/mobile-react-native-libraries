@@ -71,7 +71,15 @@ function* _verifyState(action) {
   return false;
 }
 
-// Starts request
+/**
+ * Starts playback
+ * @param source.uri sound file name or http url (required)
+ * @param source.basePath path (if 'uri' is a file; may contain special path PATH_(...))
+ * @param options.paused initial paused state (by default isPaused = false)
+ * @param options.repeat repetition counter (-1 for infinite loop, 1 by default)
+ * @param options.pos initial position in secs (0.0 by default)
+ * @param options.volume initial volume (0.0 - 1.0, 1.0 by default)
+ */
 function* _startRequest(action) {
 
   if ((yield select(selectors.getLogLevel)) > 0) {
@@ -99,6 +107,7 @@ function* _startRequest(action) {
     const sound = yield take(loadChannel);
     const duration = sound.getDuration();
     loadChannel.close();
+
     if (duration === -1) {
       errCode = constants.ERROR_SOURCE_URI;
       throw new Error('Cannot load sound from ' + utils.getSourceUri(info));
@@ -106,6 +115,26 @@ function* _startRequest(action) {
 
     const state = yield select(selectors.getState);
     const componentOptions = state.options;
+
+    state.info.duration = duration;
+    state.info.size = (yield fs.awaitGetFileStats(fs.buildPath(basePath, uri))).size; // -1 for http source
+    state.sound = sound;
+
+    yield put(actions.setState(state));
+
+    yield put(actions.volumeRequest(options.volume));
+
+    if (options.paused === true) {
+      yield put(actions.pauseRequest(true));
+    }
+
+    if (options.repeat > 1) {
+      sound.setNumberOfLoops(options.repeat - 1);
+    }
+
+    if (options.pos > 0.0) {
+      yield put(actions.setPosRequest(options.pos));
+    }
 
     const channels = [
       yield call(_createPlaybackChannel, sound),
@@ -119,24 +148,6 @@ function* _startRequest(action) {
     }
 
     let started = false, isPaused = options.paused, updateCurrentTime = true;
-
-    state.info.duration = duration;
-    state.info.size = (yield fs.awaitGetFileStats(fs.buildPath(basePath, uri))).size; // -1 for http source
-    state.sound = sound;
-
-    yield put(actions.setState(state));
-
-    if (options.paused === true) {
-      yield put(actions.pauseRequest(true));
-    }
-
-    if (options.repeat > 1) {
-      sound.setNumberOfLoops(options.repeat - 1);
-    }
-
-    if (options.pos > 0.0) {
-      yield put(actions.setPosRequest(options.pos));
-    }
 
     while (true) {
 

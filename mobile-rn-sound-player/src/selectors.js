@@ -9,7 +9,9 @@ export const isPaused = (state) => state[NAME].isPaused;
 export const getCurrentTime = (state) => state[NAME].currentTime;
 export const getInfo = (state) => state[NAME].info;
 export const getDuration = (state) => state[NAME].info.duration;
+export const getVolume = (state) => state[NAME].volume;
 export const getError = (state) => state[NAME].error;
+
 
 // Public Export
 export const publicSelectors = {
@@ -17,9 +19,10 @@ export const publicSelectors = {
   isPlaying,          // true if playback is in progress
   isPaused,           // true if paused (isPlaying is still true)
   getCurrentTime,     // current position in sound file (secs)
-  getInfo,            // get descriptor of the last loaded sound
-  getDuration,        // get duration of the last loaded sound
-  getError            // get current error { code, name, message(opt) }
+  getInfo,            // descriptor of the last loaded sound
+  getDuration,        // duration of the last loaded sound
+  getVolume,          // volume descriptor { mute, level }
+  getError            // last error descriptor { code, name, message(opt) }
 };
 
 export default publicSelectors;

@@ -2,7 +2,7 @@
 
 Redux/Saga wrapper for react-native-sound component.
 
-Version 0.0.3
+Version 0.0.4
 
 ## Module Public Interfaces
 
@@ -54,17 +54,19 @@ const mountRequest = (options) => ({ type: constants.MOUNT_REQUEST, options });
  */
 const unmountRequest = () => ({ type: constants.UNMOUNT_REQUEST });
 
-Start/Stop/Pause/Set Position
+Start/Stop/Pause/Set Position/Set Volume
 
 /**
  * Starts playback
- * @param source.uri sound file name or http uri (required)
- * @param source.basePath file path (if applicable, may contain special path PATH_(...))
+ * @param source.uri sound file name or http url (required)
+ * @param source.basePath path (if 'uri' is a file, may contain special path PATH_(...))
  * @param options.paused initial paused state (by default isPaused = false)
  * @param options.repeat repetition counter (-1 for infinite loop, 1 by default)
- * @param options.pos initial position in secs (0.0 y default)
+ * @param options.pos initial position in secs (0.0 by default)
+ * @param options.volume initial volume (0.0 - 1.0, 1.0 by default)
  */
-const startRequest = (source, options = { paused: false, repeat: 1, pos : 0.0}) => ({
+const startRequest = (source, options = { paused: false, repeat: 1, pos : 0.0, 
+                                          volume: { mute: false, level: 1.0 }}) => ({
   type: constants.START_REQUEST,
   source,
   options
@@ -78,7 +80,8 @@ const stopRequest = (success = true) => ({ type: constants.STOP_REQUEST, success
 
 /**
  * Pauses/Resumes playback
- * @param paused true to set paused state, false to continue playback, undefined to revert current state
+ * @param paused true to set paused state, false to continue playback, 
+                 undefined to revert current state
  */
 const pauseRequest = (paused) => ({ type: constants.PAUSE_REQUEST, paused });
 
@@ -88,6 +91,15 @@ const pauseRequest = (paused) => ({ type: constants.PAUSE_REQUEST, paused });
  */
 const setPosRequest = (pos = 0.0) => ({ type: constants.SET_POS_REQUEST, pos });
 
+/**
+ * Sets volume
+ * @param volume volume descriptor
+ */
+const volumeRequest = (volume = { mute: false, level: 1.0} ) => ({ 
+  type: constants.VOLUME_REQUEST, 
+  volume
+});
+ 
 ```
 
 ### Selectors
@@ -100,7 +112,8 @@ soundPlayerSelectors.isPaused()         - true if playback is paused (isPlaying 
 soundPlayerSelectors.getCurrentTime()   - current time in secs [Real Number]
 soundPlayerSelectors.getInfo()          - descriptor of the last loaded sound *
 soundPlayerSelectors.getDuration()      - duration in secs of the last loaded sound
-soundPlayerSelectors.getError()         - last error **
+soundPlayerSelectors.getVolume()        - volume descriptor, e.g. { mute: false, level: 1.0 }
+soundPlayerSelectors.getError()         - last error descriptor **
 
 // * Info object:
 
@@ -117,7 +130,7 @@ soundPlayerSelectors.getError()         - last error **
     errCode: 0,                 // error code, one of soundPlayerConstants.ERROR_(...) constants
     details: {                  // arbitrary additional information
       error: new Error(message) // default Error object with optional message
-      ...                       // additional optional data
+      ...                       // additional error-specific data
     } 
   };
 
@@ -144,7 +157,8 @@ If you have already installed [react-native-sound](https://github.com/zmxv/react
 // rootReducer.js
 
 import { combineReducers } from 'redux';
-import { reducer as soundPlayerReducer, constants as soundPlayerConstants } from 'mobile-rn-sound-player';
+import { reducer as soundPlayerReducer, 
+         constants as soundPlayerConstants } from 'mobile-rn-sound-player';
 
 const rootReducer = combineReducers({
   ...
@@ -180,7 +194,8 @@ export default function* rootSaga() {
 import VoicePlayer from './VoicePlayer';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { selectors as soundPlayerSelectors, actions as soundPlayerActions } from 'mobile-rn-sound-player';
+import { selectors as soundPlayerSelectors, 
+         actions as soundPlayerActions } from 'mobile-rn-sound-player';
 
 function mapStateToProps(state) {
   return {
@@ -233,7 +248,7 @@ class VoicePlayer extends Component {
   };
 
   componentDidMount() {
-    const options = { updateFrequency: 150, logLevel: 1 }; // optional
+    const options = { updateFrequency: 150, logLevel: 1 }; // optional, if differs from defaults
     this.props.mountRequest(options);
   }
 
@@ -244,11 +259,14 @@ class VoicePlayer extends Component {
   ...
 
   handleStart = () => {
-    const source = { 
-      uri: fileName,                                // file name w/o path
-      basePath: soundPlayerConstants.PATH_DOCUMENT  // base path (Documents)
+    const source = {
+      uri: fileName,                                // file name (or url)
+      basePath: soundPlayerConstants.PATH_DOCUMENT  // base path (required for files, n/a for urls)
     };
-    this.props.startRequest(source);
+    const options = {                               // optional, if differs from defaults
+      volume: { level: 0.5 }                        // set volume level 0.5, mute = false
+    }
+    this.props.startRequest(source, options);
   }
 
   handleStop = () => {

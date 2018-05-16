@@ -46,6 +46,7 @@ export const STOP_REQUEST       = 'soundPlayer/STOP_REQUEST';
 export const PAUSE_REQUEST      = 'soundPlayer/PAUSE_REQUEST';
 export const RESET_REQUEST      = 'soundPlayer/RESET_REQUEST';
 export const SET_POS_REQUEST    = 'soundPlayer/SET_POS_REQUEST';
+export const VOLUME_REQUEST     = 'soundPlayer/VOLUME_REQUEST';
 
 // Private Constants
 export const LOG_LEVEL = 0;                 // output debug information: 0 - no, 1, 2 - wordy
@@ -55,6 +56,7 @@ export const DEFAULT_UPDATE_MS = 250;       // ms period of requesting current t
 export const SET_STATE          = 'soundPlayer/SET_STATE';
 export const SET_INFO           = 'soundPlayer/SET_INFO';
 export const SET_CURRENT_TIME   = 'soundPlayer/SET_CURRENT_TIME';
+export const SET_VOLUME         = 'soundPlayer/SET_VOLUME';
 
 export const defaultInfo = {
   uri: '',                    // file uri
