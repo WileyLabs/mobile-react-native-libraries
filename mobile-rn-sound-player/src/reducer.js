@@ -34,7 +34,7 @@ export default function reducer(state = initialState, action = {}) {
       if (state.options.logLevel > 1) {
         logging.deb({action});
       }
-      return { ...state, volume: action.volume };
+      return { ...state, volume: { ...state.volume, ...action.volume }};
     default:
         return state;
   }

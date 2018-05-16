@@ -4,7 +4,7 @@ import * as actions from '../actions';
 import * as selectors from '../selectors';
 import { logging, helpers } from '../utils';
 
-function* _volumeRequest(action) {
+function* _setVolumeRequest(action) {
 
   if ((yield select(selectors.getLogLevel)) > 0) {
     logging.log({action});
@@ -27,6 +27,6 @@ function* _volumeRequest(action) {
 
 }
 
-export function* watchVolumeRequest() {
-  yield takeEvery(constants.VOLUME_REQUEST, _volumeRequest);
+export function* watchSetVolumeRequest() {
+  yield takeEvery(constants.SET_VOLUME_REQUEST, _setVolumeRequest);
 }

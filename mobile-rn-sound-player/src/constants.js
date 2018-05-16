@@ -46,7 +46,7 @@ export const STOP_REQUEST       = 'soundPlayer/STOP_REQUEST';
 export const PAUSE_REQUEST      = 'soundPlayer/PAUSE_REQUEST';
 export const RESET_REQUEST      = 'soundPlayer/RESET_REQUEST';
 export const SET_POS_REQUEST    = 'soundPlayer/SET_POS_REQUEST';
-export const VOLUME_REQUEST     = 'soundPlayer/VOLUME_REQUEST';
+export const SET_VOLUME_REQUEST = 'soundPlayer/SET_VOLUME_REQUEST';
 
 // Private Constants
 export const LOG_LEVEL = 0;                 // output debug information: 0 - no, 1, 2 - wordy

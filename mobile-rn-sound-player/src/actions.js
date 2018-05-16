@@ -51,7 +51,7 @@ export const setPosRequest = (pos = 0.0) => ({ type: constants.SET_POS_REQUEST, 
  * Sets volume
  * @param volume volume descriptor
  */
-export const volumeRequest = (volume = { mute: false, level: 1.0} ) => ({ type: constants.VOLUME_REQUEST, volume });
+export const setVolumeRequest = (volume = { mute: false, level: 1.0} ) => ({ type: constants.SET_VOLUME_REQUEST, volume });
 
 // Exported Public Actions
 
@@ -62,7 +62,7 @@ export const publicActions = {
   stopRequest,          // stops recording
   pauseRequest,         // pauses/resumes playback
   setPosRequest,        // sets playback position
-  volumeRequest         // sets volume
+  setVolumeRequest      // sets volume
 };
 
 export default publicActions;

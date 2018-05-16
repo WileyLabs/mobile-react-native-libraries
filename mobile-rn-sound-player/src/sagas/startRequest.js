@@ -122,7 +122,7 @@ function* _startRequest(action) {
 
     yield put(actions.setState(state));
 
-    yield put(actions.volumeRequest(options.volume));
+    yield put(actions.setVolumeRequest(options.volume));
 
     if (options.paused === true) {
       yield put(actions.pauseRequest(true));

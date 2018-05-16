@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-sound-player",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A helper module to play sound in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
@@ -33,7 +33,7 @@
   "keywords": [
     "react-native",
     "audio",
-    "record",
+    "player",
     "feature"
   ],
   "peerDependencies": {

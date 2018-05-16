@@ -2,7 +2,7 @@
 
 Redux/Saga wrapper for react-native-sound component.
 
-Version 0.0.4
+Version 0.0.5
 
 ## Module Public Interfaces
 
@@ -28,7 +28,7 @@ Notification actions:
 
 Error codes:
 
-  ERROR_NOT_MOUNTED       - component was not properly initialized (call mountRequest first)
+  ERROR_NOT_MOUNTED       - component was not properly initialized
   ERROR_SOURCE_URI        - Sound source is either not specified or not accessible 
                             (details: { uri, basePath})
   ERROR_PLAYBACK          - generic playback error
@@ -95,8 +95,8 @@ const setPosRequest = (pos = 0.0) => ({ type: constants.SET_POS_REQUEST, pos });
  * Sets volume
  * @param volume volume descriptor
  */
-const volumeRequest = (volume = { mute: false, level: 1.0} ) => ({ 
-  type: constants.VOLUME_REQUEST, 
+const setVolumeRequest = (volume = { mute: false, level: 1.0} ) => ({ 
+  type: constants.SET_VOLUME_REQUEST, 
   volume
 });
  
