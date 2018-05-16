@@ -1,5 +1,5 @@
 import * as constants from './constants';
-import { logging } from './utils';
+import { logging, helpers } from './utils';
 
 const initialState = {
   info: constants.defaultInfo,          // playback info
@@ -16,7 +16,8 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case constants.SET_STATE:
-      if (state.options.logLevel > 1) {
+      const logLevel = helpers.getField(action.params, 'options.logLevel', state.options.logLevel);
+      if (logLevel > 1) {
         logging.deb({action});
       }
       return { ...state, ...action.params };

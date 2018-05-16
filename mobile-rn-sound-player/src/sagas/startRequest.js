@@ -82,7 +82,8 @@ function* _verifyState(action) {
  */
 function* _startRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
+  const logLevel = yield select(selectors.getLogLevel);
+  if (logLevel  > 0) {
     logging.log({action});
   }
 
@@ -148,6 +149,10 @@ function* _startRequest(action) {
     }
 
     let started = false, isPaused = options.paused, updateCurrentTime = true;
+
+    if (logLevel === 1) {
+      logging.log({info: state.info});
+    }
 
     while (true) {
 
