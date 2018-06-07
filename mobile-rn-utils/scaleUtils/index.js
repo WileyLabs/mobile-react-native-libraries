@@ -15,7 +15,6 @@ export const widthFromPercentage = widthInPercent /* : string */ => /* : number 
 export const heightFromPercentage = heightInPercent /* : string */ => /* : number */ PixelRatio.roundToNearestPixel(deviceHeight * parseFloat(heightInPercent) / 100);
 
 export default {
-  normalizeSize,
   scale,
   verticalScale,
   moderateScale,

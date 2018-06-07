@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-utils",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A collection of helper modules for react native applications",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
@@ -26,7 +26,7 @@
     "type": "git",
     "url": "git@github.com:WileyLabs/mobile-react-native-libraries.git"
   },
-  "main": "src/index.js",
+  "main": "index",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
