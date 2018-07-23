@@ -1,0 +1,41 @@
+{
+  "name": "mobile-rn-accessibility",
+  "version": "0.0.1",
+  "description": "A helper module to support accessibility",
+  "license": "MIT",
+  "author": "John Wiley & Sons, Inc.",
+  "contributors": [
+    {
+      "name": "Dmitry Mikhaylov",
+      "email": "dmikhaylov@wiley.com"
+    },
+    {
+      "name": "Chekhlov, Sergey",
+      "email": "schekhlov@wiley.com"
+    },
+    {
+      "name": "Efimov, Andrey",
+      "email": "aefimov@wiley.com"
+    },
+    {
+      "name": "Malykh, Michael",
+      "email": "mmalykh@wiley.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:WileyLabs/mobile-react-native-libraries.git"
+  },
+  "main": "index",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "accessibility",
+    "utils"
+  ],
+  "peerDependencies": {
+    "react-native": ">=0.51.0"
+  }
+}
