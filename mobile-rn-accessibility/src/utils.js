@@ -2,6 +2,7 @@
 import { Platform, UIManager, findNodeHandle, AccessibilityInfo } from 'react-native';
 import html from './utils/html.js';
 import helpers from './utils/helpers.js';
+import Locker from './utils/locker.js';
 
 const trackAccessibility = flag => { Accessibility.status = flag; };
 
@@ -317,7 +318,9 @@ export const publicUtils = {
   // Html helpers
   addLabel: html.addLabel, addClassAttribute: html.addClassAttribute,
   // Accessibility status
-  accessibilityStatus
+  accessibilityStatus,
+  // Utilities
+  Locker
 };
 
 export default publicUtils;
