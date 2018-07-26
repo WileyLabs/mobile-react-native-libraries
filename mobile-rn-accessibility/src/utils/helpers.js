@@ -15,12 +15,27 @@ export function getField(object, path, defaultValue) {
   }
 }
 
+// Puts value within low and high borders
 export function putWithin(val, lo, hi) {
   return val < lo ? lo : (val > hi) ? hi : val;
 }
 
+// Returns true if object is String
 function isString(s) {
   return s !== undefined && (typeof (s) === 'string' || s instanceof String);
+}
+
+// Prepends string with char
+export function prepend(text, chr, upToLength) {
+  const str = text.toString();
+  const length = upToLength - str.length;
+  return length > 0 ? new Array(length + 1).join(chr) + str : str;
+}
+
+// Returns current time as hh:mm:ss.ddd
+export function getTime(time) {
+  const t = time && (typeof time !== 'number') ? time : (time ? new Date(time) : new Date());
+  return t.toTimeString().slice(0, 8) + '.' + prepend(t.getMilliseconds().toString(), '0', 3);
 }
 
 // Returns if value is not null or undefined
@@ -55,7 +70,7 @@ export function getErrorMessage(error) {
 
 export function isDevice(descriptor) {
   try {
-    let device = (DeviceInfo.isTablet() ? 'tablet' : 'phone') + (Platform.OS === 'ios' ? ', ios' : ', android') + 
+    let device = (DeviceInfo.isTablet() ? 'tablet' : 'phone') + (Platform.OS === 'ios' ? ', ios' : ', android') +
                  (DeviceInfo.isEmulator() ? ', emulator' : ', device');
     return descriptor.split(',').every(flag => device.indexOf(flag.trim().toLowerCase()) >= 0);
   }
@@ -89,6 +104,8 @@ export function cloneChildrenWithProps(children, props) {
 export const helpers = {
   getField,
   putWithin,
+  getTime,
+  prepend,
   isDefined,
   sleep,
   buildError,

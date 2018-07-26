@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.2
+Version 0.0.3
 
 ## Module Public Interfaces
 
@@ -63,8 +63,9 @@ a11y.a11yStatus()      - true if accessibility (VoiceOver/TalkBack) is ON
  * @param elem Element
  * @param options.name element name (optional)
  * @param options.silent false to switch on logging and error reporting
+ * @param options.verify function to be called just before sendAccesibilityEvent to verify that elem exists (Android, rn 0.56+)
  */
-function setFocus(elem, { name = '', silent = true})
+function setFocus(elem, { name = '', silent = true, verify = () => true})
 
 /**
  * Posts accessibility focus
@@ -72,26 +73,31 @@ function setFocus(elem, { name = '', silent = true})
  * @param options.name element name (optional)
  * @param options.timeout post timeout 
  * @param options.silent false to switch on logging
+ * @param options.verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+)
  */
-function postFocus(elem, { name = '', timeout = 333, silent = true });
+function postFocus(elem, { name = '', timeout = 333, silent = true, verify = () => true } )
+
 
 /**
  * Returns accessibility properties for JSX element
  * 
  * @param accessible true if element accessible
- * @param options.type element's type (one of 'button', 'text', 'checkbox' etc)
- * @param options.name element's name (e.g. text on button)
- * @param options.value element's value (e.g. 1 for switch, 20 for slider etc)
- * @param options.label element's label (overrides name/type pair)
- * @param options.disabled true if element is disabled
- * @param options.focus function to be called on ref to set accessiblity focus
- * @param options.object object type (e..g. 'view', 'modal')
- * @param options.name traits explicit accessibilityTraits value for iOS
- * @param otherProps other properties to be included in accessibility object (e.g. a11yStatus)
+ * @param params.type element's type (one of 'button', 'text', 'checkbox' etc)
+ * @param params.name element's name (e.g. text on button)
+ * @param params.value element's value (e.g. 1 for switch, 20 for slider etc)
+ * @param params.label element's label (overrides name/type pair)
+ * @param params.disabled true if element is disabled
+ * @param params.focus function to be called on ref to set accessiblity focus
+ * @param params.object object type (e..g. 'view', 'modal')
+ * @param params.traits special value for 'accessibilityTraits' (iOS)
+ * @param params.hidden special value for 'accessibilityElementHidden' (iOS)
+ * @param params.important spacial value for 'importantForAccessibility'; (Android)
+ * @param params properties to add to a11yProps (e.g. a11yStatus)
  */
-function a11yProps(accessible, 
-                   options = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0, object: '', traits: ''},
-                   otherProps);
+ function a11yProps(
+  accessible,
+  params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0, object: '', traits: '', hidden: false, important: undefined },
+  addProps);
 
 [TBC]
 

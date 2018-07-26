@@ -1,22 +1,10 @@
 {
   "name": "mobile-rn-accessibility",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A helper module to support accessibility",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
   "contributors": [
-    {
-      "name": "Dmitry Mikhaylov",
-      "email": "dmikhaylov@wiley.com"
-    },
-    {
-      "name": "Chekhlov, Sergey",
-      "email": "schekhlov@wiley.com"
-    },
-    {
-      "name": "Efimov, Andrey",
-      "email": "aefimov@wiley.com"
-    },
     {
       "name": "Malykh, Michael",
       "email": "mmalykh@wiley.com"
