@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.3
+Version 0.0.4
 
 ## Module Public Interfaces
 
@@ -31,7 +31,7 @@ a11y.a11yInit(options)
 Redux/Saga:
 
   export function* saga() {
-    yield put(a11y.a11yInit({logLevel: 2, debug: true}));
+    yield put(a11y.a11yInit({logLevel: 1, debug: true}));
   }
 
 Navigation
@@ -96,7 +96,8 @@ function postFocus(elem, { name = '', timeout = 333, silent = true, verify = () 
  */
  function a11yProps(
   accessible,
-  params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0, object: '', traits: '', hidden: false, important: undefined },
+  params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0,
+             object: '', traits: '', hidden: false, important: undefined },
   addProps);
 
 [TBC]
@@ -111,7 +112,7 @@ import a11y from 'mobile-rn-accessibility'
 <JSX.Element {...a11y.a11yProps(accessible, { object: 'view' })} />
 
 ** To set postponed focus on JSX element (preferable)
-<JSX.Element ref={ elem => a11y.postFocus(elem) } />
+<JSX.Element ref={ elem => a11y.postFocus(elem, { verify: () => this.mounted }) } />
 
 ** To immediately set focus on JSX element
 <JSX.Element ref={ elem => a11y.setFocus(elem) } />

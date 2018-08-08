@@ -2,9 +2,13 @@ import { Platform, UIManager, findNodeHandle, AccessibilityInfo } from 'react-na
 import html from './utils/html.js';
 import helpers from './utils/helpers.js';
 import Locker from './utils/locker.js';
+import logging from './utils/logging.js';
+
+const log = logging.logff.bind(logging.logff, {name: '[A11Y::Utils] '});
 
 const accessibilityChanged = flag => { Accessibility.status = flag; };
 const accessibilityStatus = new Accessibility();
+const SILENT = true;
 
 export function Accessibility() {
   Accessibility.status = false;
@@ -41,16 +45,15 @@ export async function requestStatus(cb) {
  * @param options.verify function to be called just before sendAccesibilityEvent to verify that elem exists (Android, rn 0.56+)
  * @see {@link https://github.com/facebook/react-native/issues/12492}
  */
-export function setFocus(elem, { name = '', silent = true, verify = () => true } = { name: '', silent: true, verify: () => true }) {
+export function setFocus(elem, { name = '', silent = SILENT, verify = () => true } = { name: '', silent: SILENT, verify: () => true }) {
+  const obj = !silent && { name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
   if (!Accessibility.status) {
     if (Platform.OS !== 'ios' || silent) {
       return;
     }
   }
   if (!elem) {
-    if (!silent) {
-      console.log('[A11y::Utils] setFocus', 'invalid reference passed: ', { name, elem });
-    }
+    !silent && log('Invalid reference passed', obj);
     return;
   }
   try {
@@ -59,22 +62,18 @@ export function setFocus(elem, { name = '', silent = true, verify = () => true }
     }
     else {
       const node = findNodeHandle(elem);
-      if (node && (verify && verify())) {
+      if (node && verify && verify()) {
         UIManager.sendAccessibilityEvent(node, 8);
-        if (!silent) {
-          console.log('[A11y::Utils] setFocus focus on', { name, elem });
-        }
+        !silent && log(obj);
       }
-      else if (!silent) {
-        console.log('[A11y::Utils] setFocus verification failed', { name, elem });
+      else {
+        !silent && log('Verification failed', obj);
       }
     }
 
   }
   catch (err) {
-    if (!silent) {
-      console.log('[A11y::Utils] setFocus', err.message, { name, elem });
-    }
+    !silent && log(err.message, obj);
   }
 }
 
@@ -86,20 +85,12 @@ export function setFocus(elem, { name = '', silent = true, verify = () => true }
  * @param options.silent false to switch on logging
  * @param options.verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+)
  */
-export function postFocus(elem, { name = '', timeout = 333, silent = true, verify = () => true } = { name: '', timeout: 333, silent: true, verify: () => true } ) {
-  if (!elem) {
-    return;
-  }
-  setTimeout(() => setFocus(elem,
-                            { name: (name ? 'post: ' + name : ''),
-                              silent: (silent !== undefined ? silent : true),
-                              verify
-                            }),
-                            timeout || 333);
+export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, verify = () => true } = { name: '', timeout: 333, silent: SILENT, verify: () => true } ) {
+  elem && setTimeout(() => setFocus(elem, { name: (name ? 'post: ' + name : ''), silent: (silent !== undefined ? silent : true), verify}), timeout || 333);
 }
 
 /**
- *  Converts Roman number (string) to Arabic number
+ * Converts Roman number (string) to Arabic number
  * @param str Roman number as string
  * @see {@link https://www.selftaughtjs.com/algorithm-sundays-converting-roman-numerals/}
  */
@@ -122,12 +113,16 @@ function fromRoman(str) {
 }
 
 /**
- *  Translates Roman numbers to arabic numbers for Accessibility labels
- *  @example Section II. Examples... => Section 2. Examples...
+ * Translates Roman numbers to arabic numbers for Accessibility labels
+ * @param text text with Roman number (search for first appearance of MDCLXVI symbols)
+ * @param separator text separator, if specified then only first part is taken for analysis
+ * @param silent if true then no error information printed
+ *
+ * @example Section II. Examples... => Section 2. Examples...
  */
-export function readRomanNumber(text, separator = '.', silent = true) {
+export function readRomanNumber(text, separator = '.', silent = SILENT) {
   try {
-    const parts = text.split(separator);
+    const parts = separator ? text.split(separator) : [text];
     const startsAt = parts[0].search(/^[MDCLXVI)(]+$/);
     if (startsAt >= 0) {
       const number = fromRoman(parts[0].slice(startsAt));
@@ -135,29 +130,39 @@ export function readRomanNumber(text, separator = '.', silent = true) {
     }
   }
   catch (err) {
-    if (!silent) {
-      console.log('[A11y::Utils] readRomanNumber', err.message);
-    }
+    !silent && log(err.message);
   }
   return text;
 }
 
-// Translates Date for Accessibility labels (accessibility label should read Date as a Date and not as Numbers)
-export function getDateTime(dateAsText, silent = true, locale = 'en-US') {
+/**
+ * Translates Date for Accessibility labels (accessibility label should read Date as a Date and not as Numbers)
+ * @param dateAsText date as text
+ * @param silent if true then no error information printed
+ * @param locale locale to apply for conversion
+ * @param options options to apply for conversion
+ */
+export function getDateTime(
+    dateAsText, silent = SILENT, locale = 'en-US',
+    options = { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: undefined }) {
   try {
-    const options = { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: undefined };
     return new Date(dateAsText).toLocaleString(locale, options);
   }
   catch (err) {
-    if (!silent) {
-      console.log('[A11y::Utils] getDateTime', err.message);
-    }
+    !silent && log(err.message);
   }
   return dateAsText;
 }
 
-// Translates duration specified as 'hh:mm:ss' or 'mm:ss' for Accessibility labels (first digit position is used as initial time position)
-export function getDuration(text, format = '', shorten = false, silent = true) {
+/**
+ * Translates duration specified as 'hh:mm:ss' or 'mm:ss' for Accessibility labels;
+ * First digit position in text is used as initial time position
+ * @param text duration as text ('hh:mm:ss' or 'mm:ss')
+ * @param format duration's format; by default 'hh:mm:ss' (L(text) >= 5) or 'mm:ss' (L(text) < 5)
+ * @param shorten if true then leading zeroes are skipped
+ * @param silent if true then no error information printed
+ */
+export function getDuration(text, format = '', shorten = false, silent = SILENT) {
   try {
     const abbrs = [ 'hh', 'mm', 'ss' ];
     const names = [ { one: 'hour', many: 'hours' }, { one: 'minute', many: 'minutes' }, { one: 'second', many: 'seconds' } ];
@@ -182,22 +187,17 @@ export function getDuration(text, format = '', shorten = false, silent = true) {
     return (timeStartsAt > 0 ? text.slice(0, timeStartsAt) : '') + time;
   }
   catch (err) {
-    if (!silent) {
-      console.log('[A11y::Utils] getDuration', err.message);
-    }
+    !silent && log(err.message);
     return text;
   }
 }
 
 // Returns accessibility properties of JSX object for Android
 function getPropsAndroid(accessible, { type, checked, disabled, important }) {
-  const props = {};
-  if (accessible !== undefined) {
-    props.accessible = accessible;
-    if (!important) {
-      props.importantForAccessibility = accessible ? 'yes' : 'no-hide-descendants';
-    }
-  }
+  const props = {
+    ...(accessible !== undefined && { accessible }),
+    ...(important !== undefined ? { importantForAccessibility: important } : { importantForAccessibility: accessible ? 'yes' : 'no-hide-descendants' })
+  };
   if (type && !disabled) {
     const controlType = { radiobutton: 'radiobutton', button: 'button', tab: 'button', switch: 'button',
                           checkbox: 'button', link: 'button' }[type];
@@ -205,25 +205,17 @@ function getPropsAndroid(accessible, { type, checked, disabled, important }) {
       props.accessibilityComponentType = controlType !== 'radiobutton' ? controlType : (checked ? 'radiobutton_checked' : 'radiobutton_unchecked');
     }
   }
-  if (important) {
-    props.importantForAccessibility = important;
-  }
   return props;
 }
 
 // Returns accessibility properties of JSX object for iOS
 function getPropsIOS(accessible, { type, traits, disabled, hidden }) {
-  const props = {};
-  if (accessible !== undefined) {
-    props.accessible = accessible;
-  }
-  if (hidden) {
-    props.accessibilityElementsHidden = true;
-  }
-  if (traits) {
-    props.accessibilityTraits = traits;
-  }
-  else if (type && !disabled) {
+  const props = {
+    ...(accessible !== undefined && { accessible }),
+    ...(hidden && { accessibilityElementsHidden: true }),
+    ...(traits && { accessibilityTraits: traits })
+  };
+  if (!traits && type && !disabled) {
     const controlType = { radiobutton: 'button', text: 'text', header: 'text', button: 'button', tab: 'button',
                           switch: 'button', checkbox: 'button', link: 'link', slider: 'adjustable' }[type];
     if (controlType) {
@@ -251,7 +243,8 @@ function getPropsIOS(accessible, { type, traits, disabled, hidden }) {
  */
 export function a11yProps(
   accessible,
-  params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0, object: '', traits: '', hidden: false, important: undefined },
+  params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0,
+             object: '', traits: '', hidden: false, important: undefined },
   addProps) {
   try {
     const options = params ? params : {};
@@ -279,7 +272,7 @@ export function a11yProps(
     return addProps ? {...props, ...addProps} : props;
   }
   catch (err) {
-    console.log('[A11y::Utils] a11yProps', err.message);
+    log(err.message);
   }
 
   return {};

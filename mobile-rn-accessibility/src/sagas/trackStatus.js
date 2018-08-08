@@ -20,10 +20,7 @@ export function* watchStatus() {
   while (true) {
     const action = yield take(channel);
     const options = yield select(selectors.getOptions);
-    if (options.logLevel >= 2) {
-      console.log('[A11Y::Status] ', { action });
-    }
+    options.logLevel >= 2 && console.log('[A11Y::Status] ', { action });
     yield put(actions.setStatus(options.debug ? true : action));
   }
-
 }

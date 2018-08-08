@@ -1,4 +1,7 @@
 import * as constants from './constants';
+import logging from './utils/logging.js';
+
+const log = logging.logff.bind(logging.logff, {name: '[A11Y::Reducer] '});
 
 export const initialState = {
   status: false,        // a11y (VoiceOver) status
@@ -10,27 +13,21 @@ export const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case constants.SET_PARAMS:
-      if (state.options.logLevel >= 2) {
-        console.log('[A11Y::Reducer]', { action, state });
-      }
+      state.options.logLevel >= 2 && log({action, state});
       return {
         ...state,
-        screen : action.screen === undefined ? state.screen : action.screen,
-        stack: action.stack === undefined ? state.stack : action.stack,
+        ...(action.screen && {screen: action.screen}),
+        ...(action.stack && {stack: action.stack})
       };
     case constants.SET_STATUS:
-      if (state.options.logLevel >= 2) {
-        console.log('[A11Y::Reducer]', { action, state });
-      }
+      state.options.logLevel >= 2 && log({action, state});
       return {
         ...state,
         status : action.status
        };
     case constants.SET_STATE:
-      if (state.options.logLevel > 1) {
-        console.log('[A11Y::Reducer]', {action});
-        }
-        return { ...state, ...action.params };
+      state.options.logLevel >= 2 && log({action});
+      return {...state, ...action.params};
     default:
       return state;
   }

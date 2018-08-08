@@ -1,8 +1,8 @@
 /**
  * Logging utiilities
- * ver 0.0.2
+ * ver 0.0.3
  * created: Mar, 2018
- * last updated: 25 July 2018
+ * last updated: 07 Aug 2018
  * author: mmalykh@wiley.com
  * dependencies: ./helpers.js
  */
@@ -15,17 +15,10 @@ export function prepend(text, chr, upToLength) {
   return length > 0 ? new Array(length + 1).join(chr) + str : str;
 }
 
-// Returns current time as hh:mm:ss.ddd
-export function getTime() {
-  const time = new Date();
-  return time.toTimeString().slice(0, 8) + '.' + prepend(time.getMilliseconds().toString(), '0', 3);
-}
-
 // Logs function callee and passed parameters
 export function logf() {
-  let caller = '', params = '';
-  let args = [...arguments];
-  let stack = new Error().stack;
+  const time = helpers.getTime();
+  let caller = '', stack = new Error().stack;
   try {
     caller = stack.split('\n')[2].trim().split(/at Object.|at Function.|at /)[1].split(/ |:|[(]/)[0];
   }
@@ -33,65 +26,60 @@ export function logf() {
     caller = '';
   }
   try {
-    caller = caller.replace('_this.', '');
-    params = args.reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg))), '' );
-    console.log('[' + getTime() + '] ' + caller + (params.length ? (': ' + params) : ''));
+    const params = [...arguments].reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg))), '' );
+    console.log('[' + time + '] ' + caller.replace('_this.', '') + (params.length ? (': ' + params) : ''));
   } catch (err) {
-    console.log('[' + getTime() + '] ' + caller + ': ' + err.message);
+    console.log('[' + time + '] ' + caller + ': ' + err.message);
   }
 }
 
-// Logs function callee and passed parameters
-export function logff(format = { replacer: null, space: '\t', stack: false, name: '', color: '#000000'}) {
-  let caller = '', params = '', stack = '';
-  const f = format === null ? { replacer: null, space: ' ', stack: false, name: '', color: '#0000000' } : format;
-  let args = [...arguments];
-  const prefix = !(f.name === undefined || f.name === null) ? f.name : '';
-  const clr = !(f.color === undefined || f.color === null) ? f.color : '#000000';
+/**
+ * Logs function callee and passed parameters, first parameter is always format
+ * @param format output format
+ * @example
+ *    const log = logging.logff.bind(logging.logff, {name: '[A11Y::Navigation]'});
+ *    log(action);
+ */
+export function logff(format, ...args) {
+  const time = helpers.getTime();
   const errorStack = new Error().stack;
-  args.splice(0, 1);
+  const f = { ...{ replacer: null, space: '', stack: false, name: '', color: '#0000000' }, ...format};
+  const clr = helpers.getField(f.color, '',  '#000000'), prefix = helpers.getField(f.name, '', '');
+  let caller = '', stack;
   try {
-    const items = errorStack.split('\n');
-    const path = [];
-    const skip = ['tryCatch', 'blob'];
     if (f.stack) {
+      const items = errorStack.split('\n'), skip = ['tryCatch', 'blob'], path = [];
       for (let i = 3; i < items.length; i++) {
         const item = items[i].trim().split(/at Object.|at Function.|at /)[1].split(/ |:|[(]/)[0];
-        if (skip.indexOf(item) >= 0) {
-          continue;
-        }
-        path.push(item);
+        skip.indexOf(item) < 0 && path.push(item);
       }
-      stack = path.length ? path.join(' <- ') : '';
+      stack = path.length ? path.join(' < ') : '';
     }
     caller = errorStack.split('\n')[2].trim().split(/at Object.|at Function.|at /)[1].split(/ |:|[(]/)[0];
   }
   catch (err) {
     caller = '';
   }
+  const title = '%c[' + time + '] ' + prefix + caller.replace('_this.', '');
   try {
-    caller = caller.replace('_this.', '');
-    params = args.reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg, f.replacer, f.space))), '' );
-    const style = 'color: ' + clr;
-    console.log('%c[' + getTime() + '] '  + prefix + caller + (params.length ? (': ' + params) : ''), style);
-    if (stack.length) {
-      console.log('<== (' + stack + ')');
-    }
+    const params = args.reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg, f.replacer, f.space))), '' );
+    console.log(title + (params.length ? (': ' + params) : ''), 'color: ' + clr);
+    stack && console.log(title + ' < ' + stack, 'color: ' + clr);
   } catch (err) {
-    console.log('[' + getTime() + '] '  + prefix + caller + ': ' + err.message);
+    console.log(title + ': ' + err.message, 'color: ' + clr);
   }
 }
 
 export const loge = logff.bind(logff, { color: 'red', space: '' });
 export const logw = logff.bind(logff, { color: 'orange', space: ''});
-export const logd = logff.bind(logff, { color: 'green', space: '   ', stack: true});
+export const logd = logff.bind(logff, { color: 'green', space: ' ', stack: true});
 export const logs = helpers.isDevice('emulator') && logf.bind(logf);
 
 export const logging = {
   log: logf,          // substitution for console.log()
   logf, logff,        // formatted log
   loge, logw, logd,   // errors, warnings, debug
-  logs                // simulator only log
+  logs                // simulator only
 };
 
 export default logging;

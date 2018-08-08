@@ -32,5 +32,5 @@ export default publicActions;
 
 // Private Action Creators for Reducer
 export const setParams = (screen, stack) => ({ type: constants.SET_PARAMS, screen, stack });
-export const setStatus = (status) => ({ type: constants.SET_STATUS, status });
+export const setStatus = status => ({ type: constants.SET_STATUS, status });
 export const setState = params => ({ type: constants.SET_STATE, params });

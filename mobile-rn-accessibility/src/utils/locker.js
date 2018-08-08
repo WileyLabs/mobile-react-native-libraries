@@ -1,63 +1,66 @@
 /**
  * Locker by timeout
- * ver 0.0.1
+ * ver 0.1.1
  * created: Mar, 2018
- * last updated: 26 July 2018
+ * last updated: 07 Aug 2018
  * author: mmalykh@wiley.com
- * dependencies: ./helpers.js
+ * dependencies: ./helpers.js, ./generate.js
  */
 import helpers from './helpers.js';
 import generate from './generate.js';
 
-// Locks itself for a timeout ms
+const log = (that, ...args) => that.silent || console.log('[Locker]', that.name, ...args);
+
+/**
+ * Locks itself for a specified timeout ms or manually by calling lock()/unlock()
+ */
 export class Locker {
 
+  // Creates locker; options: timeout (ms), name, silent
   constructor(props) {
-    this.timeout = props.timeout === undefined ? 1000 : props.timeout;
-    this.name = !props.name ? 'Locker #' + generate.hid() : props.name;
+    this.timeout = props.timeout === undefined ? 1e6 : props.timeout;
+    this.name = !props.name ? '#' + generate.hid() : props.name;
     this.time = 0;
     this.locked = 0;
-    this.log = !!props.log && helpers.isDevice('emulator'); // logging on emulator only
+    this.silent = !helpers.isDevice('emulator') || props.silent !== false;   // logging on emulator only
+    this.silent || log(this, 'created', helpers.getTime(), this);
   }
 
-  try() {
+  // Returns true & then locks object if it is unlocked, false otherwise
+  try(by) {
     const time = Date.now();
     const gone = this.timeout > 0 ? (time - this.time) : 0;
+    const suffix = !this.silent && by ? '[' + by + ']' : '';
     if (!this.locked || (gone > this.timeout)) {
       this.time = time;
       this.locked = true;
-      if (this.log) {
-        console.log('[Locker]', this.name, 'acquired at', helpers.getTime(this.time));
-        setTimeout(() => console.log('[Locker]', this.name, 'released at', helpers.getTime()), this.timeout);
-      }
+      this.silent || log(this, 'acquired at', helpers.getTime(this.time), suffix);
+      this.silent || setTimeout(() => log(this, 'released', helpers.getTime(), suffix), this.timeout);
       return true;
     }
-    if (this.log) {
-      console.log('[Locker]', this.name, 'rejected', { gone, timeout: this.timeout });
-    }
+    this.silent || log(this, 'rejected at', helpers.getTime(this.time), suffix, {gone, timeout: this.timeout});
     return false;
   }
 
+  // Returns true if object is locked
   isLocked() {
     const gone = this.timeout > 0 ? Date.now() - this.time : 0;
     return (!this.locked || (gone > this.timeout)) ? false : true;
   }
 
-  lock(resetTimer = true) {
-    this.time = resetTimer ? Date.now() : this.time;
+  // Locks object
+  lock(by, reset = true) {
+    this.time = reset ? Date.now() : this.time;
     this.locked = true;
-    if (this.log) {
-      console.log('[Locker]', this.name, 'acquired at', helpers.getTime(this.time));
-    }
+    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? '[' + by + ']' : '');
     return true;
   }
 
-  unlock() {
+  // Unlocks object
+  unlock(by) {
     this.time = Date.now();
     this.locked = false;
-    if (this.log) {
-      console.log('[Locker]', this.name, 'unlocked at', helpers.getTime(this.time));
-    }
+    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? '[' + by + ']' : '');
   }
 
 }

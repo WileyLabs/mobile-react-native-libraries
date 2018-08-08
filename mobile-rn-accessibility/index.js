@@ -6,7 +6,8 @@ import constants from './src/constants';
 import utils from './src/utils';
 import logging from './src/utils/logging.js';
 
-const { a11yProps, a11yLabel, setFocus, postFocus, cloneChildrenWithProps, addLabel, addClassAttribute,
+const { a11yProps, a11yLabel, setFocus, postFocus, cloneChildrenWithProps,
+        addLabel, addClassAttribute,
         readRomanNumber, getDateTime, getDuration, Locker } = utils;
 const { NAME } = constants;
 const { navigateRequest: a11yNavigate, initRequest: a11yInit } = actions;
@@ -23,6 +24,7 @@ const components = {
   addLabel, addClassAttribute,
   // helpers
   cloneChildrenWithProps, readRomanNumber, getDateTime, getDuration, Locker,
+  // logging
   logging
 };
 

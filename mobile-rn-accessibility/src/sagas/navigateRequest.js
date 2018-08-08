@@ -2,6 +2,9 @@ import { put, select, take, actionChannel, call } from 'redux-saga/effects';
 import * as selectors from '../selectors';
 import * as actions from '../actions';
 import * as constants from '../constants';
+import logging from '../utils/logging.js';
+
+const log = logging.logff.bind(logging.logff, {name: '[A11Y::Navigation] ', space: ' '});
 
 // Calculates parameters for 'push' navigation method
 function* pushScreen(action, current) {
@@ -40,11 +43,7 @@ function* _processNavigationEvent(action) {
   const stack = yield select(selectors.getStack);
   const logLevel = (yield select(selectors.getOptions)).logLevel;
   let navigationParams = {};
-
-  if (logLevel >= 2) {
-    console.log('[A11Y::Navigation] ', { action });
-  }
-
+  logLevel >= 2 && log(action);
   try {
     switch (action.method) {
       case 'push':
@@ -61,19 +60,15 @@ function* _processNavigationEvent(action) {
     }
     if (navigationParams.screen !== undefined) {
       yield put(actions.setParams(navigationParams.screen, navigationParams.stack));
-      if (logLevel >= 1) {
-        console.log('[A11Y::Navigation] Current screen: ' + navigationParams.screen + (navigationParams.stack.length ? '; stack = ' + JSON.stringify(navigationParams.stack) : ''));
-      }
+      logLevel >= 1 && log(navigationParams);
     }
   } catch (err) {
-    if (logLevel >= 1) {
-      console.log('[A11Y::Navigation]', err.message);
-    }
+    logLevel >= 1 && log(err.message);
   }
 
  }
 
-// Root accessibility saga
+// Navigation saga
 export function* watchNavigation() {
   const channel = yield actionChannel(constants.NAVIGATE_REQUEST);
   while (true) {

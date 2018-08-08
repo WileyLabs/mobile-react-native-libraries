@@ -7,10 +7,8 @@ import { initialState } from '../reducer';
 import helpers from '../utils/helpers';
 
 function* _initRequest(action) {
-  if (helpers.getField(action, 'options.logLevel', (yield select(selectors.getOptions)).logLevel) >= 2) {
-    console.log('[A11Y::Init]', {action});
-  }
-  yield put(actions.setState({...initialState , ...{ options: action.options } }));
+  helpers.getField(action, 'options.logLevel', (yield select(selectors.getOptions)).logLevel) >= 2 && console.log('[A11Y::Init]', {action});
+  yield put(actions.setState({...initialState , ...(action.options && {options: action.options})}));
 }
 
 export function* watchInitRequest() {
