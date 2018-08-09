@@ -1,8 +1,8 @@
 /**
- * Set of miscelleneous helper functions
- * ver 0.0.2
- * created: Mar, 2018
- * last updated: 04 Aug 2018
+ * Miscelleneous helper functions
+ * ver 0.0.3
+ * created: Mar 2018
+ * last updated: 09 Aug 2018
  * author: mmalykh@wiley.com
  * dependencies: react-native-device-info
  */
@@ -52,10 +52,7 @@ export function getTime(time) {
 
 // Returns true if value is not null and not undefined, strings are trimmed and string length should be > 0
 export function isDefined(value, path) {
-  if (isString(value)) {
-    return value.trim().length > 0;
-  }
-  return getField(value, path, null) !== null;
+  return (isString(value)) ? value.trim().length > 0 : getField(value, path, null) !== null;
 }
 
 /**
@@ -64,7 +61,7 @@ export function isDefined(value, path) {
 export function block(ms, start) {
   const time = start ? start : new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - time) >= ms){
+    if ((new Date().getTime() - time) >= ms) {
       break;
     }
   }
@@ -108,11 +105,11 @@ export function isDevice(descriptor) {
  */
 export function cloneChildrenWithProps(children, props, silent = true) {
   try {
-    if (props === undefined || children === undefined) {
+    if (!props || !children) {
       return children;
     }
     return React.Children.map(children, child => {
-      if (isString(child) || child === null || child === undefined) {
+      if (isString(child) || !child) {
         return child;
       }
       const updatedProps = {};

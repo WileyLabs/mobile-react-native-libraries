@@ -1,3 +1,10 @@
+/**
+ * Accessibility utils
+ * ver 0.0.5
+ * created: July, 2018
+ * last updated: 09 Aug 2018
+ * author: mmalykh@wiley.com
+ */
 import { Platform, UIManager, findNodeHandle, AccessibilityInfo } from 'react-native';
 import html from './utils/html.js';
 import helpers from './utils/helpers.js';
@@ -47,13 +54,11 @@ export async function requestStatus(cb) {
  */
 export function setFocus(elem, { name = '', silent = SILENT, verify = () => true } = { name: '', silent: SILENT, verify: () => true }) {
   const obj = !silent && { name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
-  if (!Accessibility.status) {
-    if (Platform.OS !== 'ios' || silent) {
-      return;
-    }
+  if (!Accessibility.status && Platform.OS === 'android') {
+    return;
   }
   if (!elem) {
-    !silent && log('Invalid reference passed', obj);
+    silent || log('Invalid reference passed', obj);
     return;
   }
   try {
@@ -64,16 +69,15 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
       const node = findNodeHandle(elem);
       if (node && verify && verify()) {
         UIManager.sendAccessibilityEvent(node, 8);
-        !silent && log(obj);
+        silent || log(obj);
       }
       else {
-        !silent && log('Verification failed', obj);
+        silent || log('Verification failed', obj);
       }
     }
-
   }
   catch (err) {
-    !silent && log(err.message, obj);
+    silent || log(err.message, obj);
   }
 }
 
@@ -107,7 +111,7 @@ function fromRoman(str) {
     }
   }
   catch (err) {
-    return undefined;
+    result = undefined;
   }
   return result;
 }
@@ -130,7 +134,7 @@ export function readRomanNumber(text, separator = '.', silent = SILENT) {
     }
   }
   catch (err) {
-    !silent && log(err.message);
+    silent || log(err.message);
   }
   return text;
 }
@@ -149,7 +153,7 @@ export function getDateTime(
     return new Date(dateAsText).toLocaleString(locale, options);
   }
   catch (err) {
-    !silent && log(err.message);
+    silent || log(err.message);
   }
   return dateAsText;
 }
@@ -179,15 +183,13 @@ export function getDuration(text, format = '', shorten = false, silent = SILENT)
         }
         duration += value;
         const skip = (index === 2 && duration !== 0 && value === 0); // skip if seconds are 0
-        if (!skip) {
-          time += (time.length ? ', ' : '') + value + ' ' + names[index][value === 1 ? 'one' : 'many'];
-        }
+        !skip && (time += (time.length ? ', ' : '') + value + ' ' + names[index][value === 1 ? 'one' : 'many']);
       }
     });
     return (timeStartsAt > 0 ? text.slice(0, timeStartsAt) : '') + time;
   }
   catch (err) {
-    !silent && log(err.message);
+    silent || log(err.message);
     return text;
   }
 }
@@ -201,9 +203,7 @@ function getPropsAndroid(accessible, { type, checked, disabled, important }) {
   if (type && !disabled) {
     const controlType = { radiobutton: 'radiobutton', button: 'button', tab: 'button', switch: 'button',
                           checkbox: 'button', link: 'button' }[type];
-    if (controlType) {
-      props.accessibilityComponentType = controlType !== 'radiobutton' ? controlType : (checked ? 'radiobutton_checked' : 'radiobutton_unchecked');
-    }
+    controlType && (props.accessibilityComponentType = controlType !== 'radiobutton' ? controlType : (checked ? 'radiobutton_checked' : 'radiobutton_unchecked'));
   }
   return props;
 }
@@ -218,9 +218,7 @@ function getPropsIOS(accessible, { type, traits, disabled, hidden }) {
   if (!traits && type && !disabled) {
     const controlType = { radiobutton: 'button', text: 'text', header: 'text', button: 'button', tab: 'button',
                           switch: 'button', checkbox: 'button', link: 'link', slider: 'adjustable' }[type];
-    if (controlType) {
-      props.accessibilityTraits = controlType;
-    }
+    controlType && (props.accessibilityTraits = controlType);
   }
   return props;
 }
@@ -247,28 +245,22 @@ export function a11yProps(
              object: '', traits: '', hidden: false, important: undefined },
   addProps) {
   try {
-    const options = params ? params : {};
+    const options = { ...params};
     const buildLabel = accessible && ((options.name || options.value) || options.label);
     const type = options.type ? options.type : 'none';
     const propsOptions = {...options, ...{ type: buildLabel ? undefined : type}};
     const props = Platform.OS === 'ios' ? getPropsIOS(accessible, propsOptions) : getPropsAndroid(accessible, propsOptions);
 
-    if (options.focus) {
-      props.accessibilityFocus = options.focus;
-    }
-
+    options.focus && (props.accessibilityFocus = options.focus);
     if (buildLabel) {
       props.accessibilityLabel = options.label ? options.label : a11yLabel(options.name, options.type, options.value, options.disabled);
     }
-
     if (options.object === 'modal' && Platform.OS === 'android' && props.accessibilityFocus) {
       delete props.accessibilityFocus; // crash on sendAccessibilityEvent for Modal (react 0.51) //TODO check against 0.54+
     }
-
     if (options.object === 'view' && Platform.OS === 'ios') {
       props.accessible = false;
     }
-
     return addProps ? {...props, ...addProps} : props;
   }
   catch (err) {
@@ -322,9 +314,7 @@ export function a11yLabel(label, type = 'button', value, disabled = false) {
       control.data = hasValue ? '' + value : '';
       break;
     case 'duration':
-      if (accessibilityLabel.length > 0) {
-        accessibilityLabel += ' ';
-      }
+      accessibilityLabel.length > 0 && (accessibilityLabel += ' ');
       accessibilityLabel += getDuration(value);
       break;
     default:
@@ -333,17 +323,9 @@ export function a11yLabel(label, type = 'button', value, disabled = false) {
       }
   }
 
-  if (type === 'slider' && control.data.length) {
-    accessibilityLabel += ', ' + control.data;
-  }
-
-  if (control.type.length) {
-    accessibilityLabel += ', ' + control.type;
-  }
-
-  if (type !== 'slider' && control.data.length) {
-    accessibilityLabel += ', ' + control.data;
-  }
+  (type === 'slider' && control.data.length) && (accessibilityLabel += ', ' + control.data);
+  control.type.length && (accessibilityLabel += ', ' + control.type);
+  (type !== 'slider' && control.data.length) && (accessibilityLabel += ', ' + control.data);
 
   return accessibilityLabel + suffix;
 }
