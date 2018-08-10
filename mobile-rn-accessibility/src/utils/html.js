@@ -1,9 +1,14 @@
-// Wraps 'what' with 'wrapper.begin' and 'wrapper.end' and returns updated html
+/**
+ * Miscelleneous html ARIA helper functions
+ * 
+ * Version: 0.0.2, 2018.08.10
+ * Created: 2018.07.01 by mmalykh@wiley.com
+ */
+
+ // Wraps 'what' with 'wrapper.begin' and 'wrapper.end' and returns updated html
 export function htmlWrapper(html, what, wrapper, flags  = 'g') {
   try {
-    const regExp = new RegExp(what, flags);
-    const wrappedHtml = html.replace(regExp, (wrapper.before || '') + what + (wrapper.after || ''));
-    return wrappedHtml;
+    return html.replace(new RegExp(what, flags), (wrapper.before || '') + what + (wrapper.after || ''));
   }
   catch (err) {
   }
@@ -44,11 +49,13 @@ export function addClassAttribute(html, how = { class: '', attr: '', value: '', 
   return html;
 }
 
-// Adds aria's attribute 'attrText' for class 'className' or array of classes
-// @param html source html
-// @param className single class name or array of class names as strings
-// @param attrText html attribute as string
-// @return updated html or source html in case of error
+/**
+ * Adds ARIA's attribute 'attrText' for class 'className' or array of classes
+ * @param html source html
+ * @param className single class name or array of class names as strings
+ * @param attrText html attribute as string
+ * @return updated html or source html in case of error
+ */
 export function addClassAttributeAsText(html, className, attrText) {
   try {
     const classes = Array.isArray(className) ? className.slice() : [className];

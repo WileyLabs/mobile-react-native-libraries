@@ -1,10 +1,10 @@
 /**
- * Locker by timeout
- * ver 0.1.1
- * created: Mar, 2018
- * last updated: 07 Aug 2018
- * author: mmalykh@wiley.com
- * dependencies: ./helpers.js, ./generate.js
+ * Locker provides controlled access by timeout
+ * 
+ * Version: 0.1.2, 2018.08.10
+ * Created: 2018.03.01 by mmalykh@wiley.com
+ * Latest changes:
+ *      2018.08.10 0.1.2 Added 'owner' properties
  */
 import helpers from './helpers.js';
 import generate from './generate.js';
@@ -30,15 +30,16 @@ export class Locker {
   try(by) {
     const time = Date.now();
     const gone = this.timeout > 0 ? (time - this.time) : 0;
-    const suffix = !this.silent && by ? '[' + by + ']' : '';
+    const suffix = this.silent || !by ? '' :  ' by ' + by;
     if (!this.locked || (gone > this.timeout)) {
       this.time = time;
       this.locked = true;
+      this.owner = by;
       this.silent || log(this, 'acquired at', helpers.getTime(this.time), suffix);
-      this.silent || setTimeout(() => log(this, 'released', helpers.getTime(), suffix), this.timeout);
+      this.silent || setTimeout(() => log(this, 'released at', helpers.getTime(), suffix), this.timeout);
       return true;
     }
-    this.silent || log(this, 'rejected at', helpers.getTime(this.time), suffix, {gone, timeout: this.timeout});
+    this.silent || log(this, 'rejected at', helpers.getTime(), suffix, {gone, timeout: this.timeout});
     return false;
   }
 
@@ -52,7 +53,8 @@ export class Locker {
   lock(by, reset = true) {
     this.time = reset ? Date.now() : this.time;
     this.locked = true;
-    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? '[' + by + ']' : '');
+    this.owner = by;
+    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? ' by ' + by : '');
     return true;
   }
 
@@ -60,7 +62,7 @@ export class Locker {
   unlock(by) {
     this.time = Date.now();
     this.locked = false;
-    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? '[' + by + ']' : '');
+    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? ' by ' + by : '', this.owner ? '; locked by ' + this.owner : '');
   }
 
 }

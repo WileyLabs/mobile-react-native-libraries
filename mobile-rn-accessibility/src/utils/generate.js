@@ -1,5 +1,12 @@
+/**
+ * Helper functions to Generate unique IDs
+ *
+ * Version: 0.0.3, 2018.08.10
+ * Created: 2018.03.01 by mmalykh@wiley.com
+ */
+
 export const generate = {
-  guid,        // generate unique string identifier
+  guid,        // generate unique [hex] string identifier
   crc32,       // generate crc32 code
   id,          // generate unique integer identifier
   hid          // generate unique hexadecimal identifier
@@ -28,8 +35,8 @@ export function id() {
   return crc32(guid());
 }
 
-export function hid() {
-  return id().toString(16).toUpperCase();
+export function hid(uppercase = true) {
+  return uppercase ? id().toString(16).toUpperCase() : id().toString(16);
 }
 
 var makeCRCTable = function() {

@@ -1,9 +1,8 @@
 /**
  * Accessibility utils
- * ver 0.0.5
- * created: July, 2018
- * last updated: 09 Aug 2018
- * author: mmalykh@wiley.com
+ * 
+ * Version: 0.0.5, 2018.08.10
+ * Created: 2018.07.01 by mmalykh@wiley.com
  */
 import { Platform, UIManager, findNodeHandle, AccessibilityInfo } from 'react-native';
 import html from './utils/html.js';

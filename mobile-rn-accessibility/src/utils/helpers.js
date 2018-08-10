@@ -1,10 +1,9 @@
 /**
- * Miscelleneous helper functions
- * ver 0.0.3
- * created: Mar 2018
- * last updated: 09 Aug 2018
- * author: mmalykh@wiley.com
- * dependencies: react-native-device-info
+ * Miscelleneous general-purpose helper functions
+ *
+ * Version: 0.0.3, 2018.08.10
+ * Created: 2018.03.01 by mmalykh@wiley.com
+ * Dependencies: react-native-device-info
  */
 import React from 'react';
 import { Platform } from 'react-native';

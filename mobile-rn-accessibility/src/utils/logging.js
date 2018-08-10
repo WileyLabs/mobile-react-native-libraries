@@ -1,12 +1,14 @@
 /**
- * Logging utiilities
- * ver 0.0.3
- * created: Mar, 2018
- * last updated: 07 Aug 2018
- * author: mmalykh@wiley.com
- * dependencies: ./helpers.js
+ * Logging utilities
+ * 
+ * Version: 0.0.4, 2018.08.10
+ * Created: 2018.03.01 by mmalykh@wiley.com
+ * Latest changes:
+ *      2018.08.10 0.0.4 Colored output now works for Emulator only
  */
 import helpers from './helpers.js';
+
+const EMULATOR = helpers.isDevice('emulator');
 
 // Prepends string with char
 export function prepend(text, chr, upToLength) {
@@ -17,7 +19,7 @@ export function prepend(text, chr, upToLength) {
 
 // Logs function callee and passed parameters
 export function logf() {
-  const time = helpers.getTime();
+  const prefix = '[' + helpers.getTime() + '] ';
   let caller = '', stack = new Error().stack;
   try {
     caller = stack.split('\n')[2].trim().split(/at Object.|at Function.|at /)[1].split(/ |:|[(]/)[0];
@@ -27,9 +29,9 @@ export function logf() {
   }
   try {
     const params = [...arguments].reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg))), '' );
-    console.log('[' + time + '] ' + caller.replace('_this.', '') + (params.length ? (': ' + params) : ''));
+    console.log(prefix + caller.replace('_this.', '') + (params.length ? (': ' + params) : ''));
   } catch (err) {
-    console.log('[' + time + '] ' + caller + ': ' + err.message);
+    console.log(prefix + caller + ': ' + err.message);
   }
 }
 
@@ -44,7 +46,7 @@ export function logff(format, ...args) {
   const time = helpers.getTime();
   const errorStack = new Error().stack;
   const f = { ...{ replacer: null, space: '', stack: false, name: '', color: '#0000000' }, ...format};
-  const clr = helpers.getField(f.color, '',  '#000000'), prefix = helpers.getField(f.name, '', '');
+  const prefix = helpers.getField(f.name, '', '');
   let caller = '', stack;
   try {
     if (f.stack) {
@@ -60,13 +62,20 @@ export function logff(format, ...args) {
   catch (err) {
     caller = '';
   }
-  const title = '%c[' + time + '] ' + prefix + caller.replace('_this.', '');
+  const title = '[' + time + '] ' + prefix + caller.replace('_this.', '');
   try {
     const params = args.reduce((all, arg) => (all += ((all.length ? '; ' : '') + JSON.stringify(arg, f.replacer, f.space))), '' );
-    console.log(title + (params.length ? (': ' + params) : ''), 'color: ' + clr);
-    stack && console.log(title + ' < ' + stack, 'color: ' + clr);
+    if (EMULATOR && f.color) {
+      const clr = 'color: ' + f.color;
+      console.log('%c' + title + (params.length ? (': ' + params) : ''), clr);
+      stack && console.log('%c' + title + ' < ' + stack, clr);
+    }
+    else {
+      console.log(title + (params.length ? (': ' + params) : ''));
+      stack && console.log(title + ' < ' + stack);
+    }
   } catch (err) {
-    console.log(title + ': ' + err.message, 'color: ' + clr);
+    console.log(title + ': ' + err.message);
   }
 }
 
