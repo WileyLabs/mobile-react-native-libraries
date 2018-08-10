@@ -4,7 +4,7 @@
  * Version: 0.1.2, 2018.08.10
  * Created: 2018.03.01 by mmalykh@wiley.com
  * Latest changes:
- *      2018.08.10 0.1.2 Added 'owner' properties
+ *      2018.08.10 0.1.2 Added 'owner' property
  */
 import helpers from './helpers.js';
 import generate from './generate.js';
@@ -12,7 +12,8 @@ import generate from './generate.js';
 const log = (that, ...args) => that.silent || console.log('[Locker]', that.name, ...args);
 
 /**
- * Locks itself for a specified timeout ms or manually by calling lock()/unlock()
+ * Locks itself for a specified ms timeout by calling try()
+ * or manually by calling lock()/unlock()
  */
 export class Locker {
 
