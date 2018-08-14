@@ -1,10 +1,12 @@
 import { eventChannel } from 'redux-saga';
-import { call, put, take, takeEvery } from 'redux-saga/effects';
+import { call, put, take, takeEvery, race } from 'redux-saga/effects';
 import Orientation from 'react-native-orientation';
-import { INIT_REQUEST } from '../constants';
-import { setOrientation } from '../actions';
+import { setOrientation, setSpecificOrientation, onOrientationChange, onSpecificOrientationChange,
+         lockOrientation, lockSpecificOrientation, setSilent } from '../actions';
+import { INIT_REQUEST, log } from '../constants';
 
-function _createEventChannel() {
+// Creates orientation listener
+function _createOrientationListener() {
   return eventChannel(emitter => {
     const orientationDidChange = orientation => emitter(orientation);
     Orientation.addOrientationListener(orientationDidChange);
@@ -12,14 +14,42 @@ function _createEventChannel() {
   });
 }
 
+// Creates specific orientation listener
+function _createSpecificOrientationListener() {
+  return eventChannel(emitter => {
+    const orientationDidChange = orientation => emitter(orientation);
+    Orientation.addSpecificOrientationListener(orientationDidChange);
+    return () => Orientation.removeSpecificOrientationListener(orientationDidChange);
+  });
+}
+
+// Creates initial specific orientation listener
+function _createGetSpecific() {
+  return eventChannel(emitter => {
+    const cb = (err, orientation) => { !err && emitter(orientation); };
+    Orientation.getSpecificOrientation(cb);
+    return () => {};
+  });
+}
+
 function* _initRequest(action) {
-  // console.log('----saga deviceOrientation._initRequest saga----');
-
-  const channel = yield call(_createEventChannel);
-
+  yield put(setOrientation(Orientation.getInitialOrientation()));
+  yield put(setSpecificOrientation(yield take(_createGetSpecific())));
+  const { options } = action;
+  const silent = !options || options.silent !== false;
+  const channels = [yield call(_createOrientationListener), yield call(_createSpecificOrientationListener)];
+  yield put(setSilent(silent));
+  options && options.specific && (yield put(lockSpecificOrientation(options.specific)));
+  options && options.orientation && (yield put(lockOrientation(options.orientation)));
   while (true) {
-    let orientation = yield take(channel);
-    yield put(setOrientation(orientation));
+    const [ orientation, specificOrientation ] = yield race([take(channels[0]), take(channels[1])]);
+    try {
+      orientation && (yield put(onOrientationChange(orientation)));
+      specificOrientation && (yield put(onSpecificOrientationChange(specificOrientation)));
+    }
+    catch (err) {
+      silent || log(err.message);
+    }
   }
 }
 
