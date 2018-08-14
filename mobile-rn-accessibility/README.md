@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.6, 2018 Aug 10
+Version 0.0.7, published 2018 Aug 14
 
 ## Module Public Interfaces
 
@@ -77,6 +77,9 @@ function setFocus(elem, { name = '', silent = true, verify = () => true})
  */
 function postFocus(elem, { name = '', timeout = 333, silent = true, verify = () => true } )
 
+Android/RN 0.56 note: JSX component should be mounted at the times of setFocus() call;
+                      if you are not sure that component is mounted - verify state with options.verify() function,
+                      otherwise the program will crash on Android/RN 0.56
 
 /**
  * Returns accessibility properties for JSX element
@@ -99,6 +102,7 @@ function postFocus(elem, { name = '', timeout = 333, silent = true, verify = () 
   params = { type: '', name: '', value: '', label: '', disabled: 0, focus: 0,
              object: '', traits: '', hidden: false, important: undefined },
   addProps);
+
 
 [TBC]
 

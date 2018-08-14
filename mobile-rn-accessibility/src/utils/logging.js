@@ -1,6 +1,6 @@
 /**
  * Logging utilities
- * 
+ *
  * Version: 0.0.4, 2018.08.10
  * Created: 2018.03.01 by mmalykh@wiley.com
  * Latest changes:

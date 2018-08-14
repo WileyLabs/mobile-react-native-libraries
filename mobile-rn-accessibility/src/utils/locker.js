@@ -1,7 +1,7 @@
 /**
  * Locker provides controlled access by timeout
  * 
- * Version: 0.1.2, 2018.08.10
+ * Version: 0.1.3, 2018.08.10
  * Created: 2018.03.01 by mmalykh@wiley.com
  * Latest changes:
  *      2018.08.10 0.1.2 Added 'owner' property
@@ -31,7 +31,7 @@ export class Locker {
   try(by) {
     const time = Date.now();
     const gone = this.timeout > 0 ? (time - this.time) : 0;
-    const suffix = this.silent || !by ? '' :  ' by ' + by;
+    const suffix = this.silent || !by ? '' :  'by ' + by;
     if (!this.locked || (gone > this.timeout)) {
       this.time = time;
       this.locked = true;
@@ -55,7 +55,7 @@ export class Locker {
     this.time = reset ? Date.now() : this.time;
     this.locked = true;
     this.owner = by;
-    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? ' by ' + by : '');
+    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? 'by ' + by : '');
     return true;
   }
 
@@ -63,7 +63,7 @@ export class Locker {
   unlock(by) {
     this.time = Date.now();
     this.locked = false;
-    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? ' by ' + by : '', this.owner ? '; locked by ' + this.owner : '');
+    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? 'by ' + by : '', this.owner ? '[' + this.owner + ']' : '');
   }
 
 }
