@@ -18,8 +18,8 @@ function* _onOrientationChange({orientation}) {
   // verify lock
   const orientationLock = yield select(selectors.getOrientationLock);
   if (orientationLock && (orientationLock !== orientation)) {
-    orientationLock === constants.mode.portrait && Orientation.lockToPortrait();
-    orientationLock === constants.mode.landscape && Orientation.lockToLandscape();
+    orientationLock === constants.mode.PORTRAIT && Orientation.lockToPortrait();
+    orientationLock === constants.mode.LANDSCAPE && Orientation.lockToLandscape();
   }
 }
 

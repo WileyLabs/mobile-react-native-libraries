@@ -2,7 +2,7 @@
 
 A helper module to manage your device orientation state in Redux.
 
-Version 0.0.3, published 2018 Aug 14
+Version 0.0.4, 2018/08/14
 
 ## Module Public Interfaces
 
@@ -17,12 +17,12 @@ import { constants as deviceOrientationConstants } from 'mobile-rn-device-orient
 ### Action Creators
 
 ```javascript
-import { actions as deviceOrientationActions } from 'mobile-rn-device-orientation'
-import { constants as deviceOrientationConstants } from 'mobile-rn-device-orientation'
+import { actions as deviceOrientationActions,
+         constants as deviceOrientationConstants } from 'mobile-rn-device-orientation'
 
-// const options = { orientation: deviceOrientationConstants.mode.portrait, silent: false };
-// options.orientation - immediate call of lockOrientation with provided orientation (default: undefined)
-// options.specific - immediate call of lockSpecificOrientation with provided specific orientation  (default: undefined)
+// const options = { lockOrientation: deviceOrientationConstants.mode.PORTRAIT, silent: false };
+// options.lockOrientation - immediate call of lockOrientation with provided orientation (default: undefined)
+// options.lockSpecificOrientation - immediate call of lockSpecificOrientation with provided specific orientation  (default: undefined)
 // options.silent - if false debug information will be added to console log  (default: true)
 // deviceOrientationActions.initRequest(options) - dispatch this action on app launch to initialize the module
 ```

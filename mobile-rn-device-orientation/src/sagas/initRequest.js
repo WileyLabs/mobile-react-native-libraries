@@ -39,8 +39,8 @@ function* _initRequest(action) {
   const silent = !options || options.silent !== false;
   const channels = [yield call(_createOrientationListener), yield call(_createSpecificOrientationListener)];
   yield put(setSilent(silent));
-  options && options.specific && (yield put(lockSpecificOrientation(options.specific)));
-  options && options.orientation && (yield put(lockOrientation(options.orientation)));
+  options && options.lockSpecificOrientation && (yield put(lockSpecificOrientation(options.lockSpecificOrientation)));
+  options && options.lockOrientation && (yield put(lockOrientation(options.lockOrientation)));
   while (true) {
     const [ orientation, specificOrientation ] = yield race([take(channels[0]), take(channels[1])]);
     try {

@@ -14,18 +14,18 @@ export const ON_ORIENTATION_CHANGE          = NAME + '/ON_ORIENTATION_CHANGE';
 export const ON_SPECIFIC_ORIENTATION_CHANGE = NAME + '/ON_SPECIFIC_ORIENTATION_CHANGE';
 
 export const mode = {
-  portrait: 'PORTRAIT',
-  landscape: 'LANDSCAPE',
-  portraitUpsideDown: 'PORTRAITUPSIDEDOWN',   // This mode is not supported by lock function
-  unknown: 'UNKNOWN'                          // This mode is not supported by lock function
+  PORTRAIT: 'PORTRAIT',
+  LANDSCAPE: 'LANDSCAPE',
+  PORTRAITUPSIDEDOWN: 'PORTRAITUPSIDEDOWN',   // This mode is not supported by lock function
+  UNKNOWN: 'UNKNOWN'                          // This mode is not supported by lock function
 };
 
 export const specificMode = {
-  portrait: 'PORTRAIT',
-  landscapeLeft: 'LANDSCAPE-LEFT',
-  landscapeRight: 'LANDSCAPE-RIGHT',
-  portraitUpsideDown: 'PORTRAITUPSIDEDOWN',   // This mode is not supported by lock function
-  unknown: 'UNKNOWN'                          // This mode is not supported by lock function
+  PORTRAIT: 'PORTRAIT',
+  LANDSCAPELEFT: 'LANDSCAPE-LEFT',
+  LANDSCAPERIGHT: 'LANDSCAPE-RIGHT',
+  PORTRAITUPSIDEDOWN: 'PORTRAITUPSIDEDOWN',   // This mode is not supported by lock function
+  UNKNOWN: 'UNKNOWN'                          // This mode is not supported by lock function
 };
 
 export const log = (...args) => console.log('[' + NAME + ']', ...args);

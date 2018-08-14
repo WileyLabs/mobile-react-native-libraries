@@ -9,7 +9,7 @@ const { initRequest, lockOrientation, lockSpecificOrientation } = actions;
 const { getOrientation, getSpecificOrientation } = selectors;
 
 export default {
-  actions, reducer, saga, selectors, constants,
+  reducer, saga,
   NAME, mode, specificMode,
   ON_ORIENTATION_CHANGE, ON_SPECIFIC_ORIENTATION_CHANGE,
   initRequest, getOrientation, getSpecificOrientation, lockOrientation, lockSpecificOrientation

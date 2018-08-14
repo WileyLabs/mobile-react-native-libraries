@@ -18,14 +18,12 @@ function* _onSpecificOrientationChange({specific}) {
   // verify lock
   const orientationLock = yield select(selectors.getSpecificOrientationLock);
   if (orientationLock && (orientationLock !== specific)) {
-    orientationLock === constants.specificMode.portrait && Orientation.lockToPortrait();
-    orientationLock === constants.specificMode.landscapeLeft && Orientation.lockToLandscapeLeft();
-    orientationLock === constants.specificMode.landscapeRight && Orientation.lockToLandscapeRight();
+    orientationLock === constants.specificMode.PORTRAIT && Orientation.lockToPortrait();
+    orientationLock === constants.specificMode.LANDSCAPELEFT && Orientation.lockToLandscapeLeft();
+    orientationLock === constants.specificMode.LANDSCAPERIGHT && Orientation.lockToLandscapeRight();
   }
 }
 
 export function* watchOnSpecificOrientationChange() {
   yield takeEvery(ON_SPECIFIC_ORIENTATION_CHANGE, _onSpecificOrientationChange);
 }
-
-

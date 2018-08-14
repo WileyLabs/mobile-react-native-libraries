@@ -14,8 +14,8 @@ function* _lockOrientationRequest({orientation}) {
   const index = Object.values(mode).indexOf(orientation);
   if (index >= 0 && index <= 1) {
     yield put(setOrientationLock(orientation));
-    orientation === mode.portrait && Orientation.lockToPortrait();
-    orientation === mode.landscape && Orientation.lockToLandscape();
+    orientation === mode.PORTRAIT && Orientation.lockToPortrait();
+    orientation === mode.LANDSCAPE && Orientation.lockToLandscape();
     silent || log('Orientation locked to ' + orientation);
   }
   else {

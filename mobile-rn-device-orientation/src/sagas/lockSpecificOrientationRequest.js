@@ -14,9 +14,9 @@ function* _lockSpecificOrientationRequest({specific}) {
   const index = Object.values(specificMode).indexOf(specific);
   if (index >= 0 && index <= 2) {
     yield put(setSpecificOrientationLock(specific));
-    specific === specificMode.portrait && Orientation.lockToPortrait();
-    specific === specificMode.landscapeLeft && Orientation.lockToLandscapeLeft();
-    specific === specificMode.landscapeRight && Orientation.lockToLandscapeRight();
+    specific === specificMode.PORTRAIT && Orientation.lockToPortrait();
+    specific === specificMode.LANDSCAPELEFT && Orientation.lockToLandscapeLeft();
+    specific === specificMode.LANDSCAPERIGHT && Orientation.lockToLandscapeRight();
     silent || log('Specific orientation locked to ' + specific);
   }
   else {
