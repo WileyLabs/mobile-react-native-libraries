@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.7, published 2018 Aug 14
+Version 0.0.8, 2018/08/15
 
 ## Module Public Interfaces
 
@@ -163,10 +163,10 @@ export default rootReducer;
 import a11y from 'mobile-rn-accessibility';
 
 export default function* rootSaga() {
-  yield [
+  yield all([
     ...
     a11y.saga()
-  ];
+  ]);
 }
 ```
 

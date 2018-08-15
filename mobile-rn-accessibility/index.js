@@ -15,12 +15,12 @@ const { getStatus: a11yStatus, getScreen: a11yScreen } = selectors;
 
 // access thru components
 export {
-  reducer, saga, selectors, constants, utils
+  reducer, saga, selectors, constants
 };
 
 // direct access
 export default {
-  reducer, saga, selectors, constants, utils,
+  reducer, saga, utils,
   NAME,
   a11yNavigate, a11yInit, a11yScreen, a11yStatus, a11yProps, a11yLabel, setFocus, postFocus,
   addLabel, addClassAttribute,
