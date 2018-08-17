@@ -7,7 +7,7 @@ export const initialState = {
   status: false,        // a11y (VoiceOver) status
   screen: '',           // current a11y screen
   stack: [],            // modal windows stack
-  options: { logLevel: constants.LOG_LEVEL, debug: false }  // component options
+  options: { logLevel: 0, debug: false }  // component options; logLevel: 0 - silent, 1, 2 - wordy logging
 };
 
 export default function reducer(state = initialState, action = {}) {

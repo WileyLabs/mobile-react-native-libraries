@@ -21,6 +21,3 @@ export const INIT_REQUEST       = NAME + '/INIT_REQUEST';
 export const SET_PARAMS         = NAME + '/SET_PARAMS';
 export const SET_STATUS         = NAME + '/SET_STATUS';
 export const SET_STATE          = NAME + '/SET_STATE';
-
-// Private Constants
-export const LOG_LEVEL          = 0;    // output debug information: 0 - silent, 1, 2 - wordy logging

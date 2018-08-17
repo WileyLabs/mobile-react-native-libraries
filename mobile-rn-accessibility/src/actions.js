@@ -17,7 +17,7 @@ export const initRequest = (options = { logLevel: 0, debug: false }) => ({ type:
  * @param screen name of the current screen
  * @param method navigation method (jumpTo, replace, push, pop, immediatelyResetRouteStack)
  */
-export const navigateRequest = (screen, method = 'jumpTo') => ({ type: constants.NAVIGATE_REQUEST, screen, method });
+export const navigateRequest = (screen, method = 'jumpTo', sender = '') => ({ type: constants.NAVIGATE_REQUEST, screen, method, sender });
 
 // Exported Public Actions
 export const publicActions = {

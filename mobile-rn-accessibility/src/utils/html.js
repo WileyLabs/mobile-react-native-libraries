@@ -4,6 +4,7 @@
  * Version: 0.0.2, 2018.08.10
  * Created: 2018.07.01 by mmalykh@wiley.com
  */
+import helpers from './helpers';
 
  // Wraps 'what' with 'wrapper.begin' and 'wrapper.end' and returns updated html
 export function htmlWrapper(html, what, wrapper, flags  = 'g') {
@@ -24,7 +25,7 @@ export function addLabel(html, how = { what: '', label: '', role: '', flags: '' 
       const role = elem.role || 'document';
       const label = elem.label || '';
       const wrapper = { before: `<span role="${role}" aria-label="${label}">`, after: '</span>' };
-      updatedHtml = htmlWrapper(updatedHtml, elem.what, wrapper, elem.flags);
+      helpers.isDefined(elem.what) && (updatedHtml = htmlWrapper(updatedHtml, elem.what, wrapper, elem.flags));
     });
     return updatedHtml;
   }

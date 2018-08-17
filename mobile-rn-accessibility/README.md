@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.8, 2018/08/15
+Version 0.0.9, 2018/08/17
 
 ## Module Public Interfaces
 
@@ -40,8 +40,9 @@ Navigation
  * Passes current screen to Accessibility
  * @param screen name of the current screen
  * @param method navigation method (jumpTo, push, pop, immediatelyResetRouteStack)
+ * @param sender name of the sender (for debugging purposes)
  */
-a11y.a11yNavigate(screen, method = 'jumpTo')
+a11y.a11yNavigate(screen, method = 'jumpTo', sender = '')
 
 ```
 

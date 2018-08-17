@@ -1,9 +1,10 @@
 /**
  * Locker provides controlled access by timeout
  * 
- * Version: 0.1.3, 2018.08.10
+ * Version: 0.1.4, 2018.08.16
  * Created: 2018.03.01 by mmalykh@wiley.com
  * Latest changes:
+ *      2018.08.16 0.1.4 Changed logging
  *      2018.08.10 0.1.2 Added 'owner' property
  */
 import helpers from './helpers.js';
@@ -20,27 +21,27 @@ export class Locker {
   // Creates locker; options: timeout (ms), name, silent
   constructor(props) {
     this.timeout = props.timeout === undefined ? 1e6 : props.timeout;
-    this.name = !props.name ? '#' + generate.hid() : props.name;
+    this.name = (props.name ? props.name + ' ' : '')  + '#' + generate.hid();
     this.time = 0;
     this.locked = 0;
-    this.silent = !helpers.isDevice('emulator') || props.silent !== false;   // logging on emulator only
-    this.silent || log(this, 'created', helpers.getTime(), this);
+    this.silent = props.silent !== false;
+    this.silent || log(this, 'created at ' + helpers.getTime(), this);
   }
 
   // Returns true & then locks object if it is unlocked, false otherwise
   try(by) {
     const time = Date.now();
     const gone = this.timeout > 0 ? (time - this.time) : 0;
-    const suffix = this.silent || !by ? '' :  'by ' + by;
+    const suffix = this.silent || !by ? '' :  ' by ' + by;
     if (!this.locked || (gone > this.timeout)) {
       this.time = time;
       this.locked = true;
       this.owner = by;
-      this.silent || log(this, 'acquired at', helpers.getTime(this.time), suffix);
-      this.silent || setTimeout(() => log(this, 'released at', helpers.getTime(), suffix), this.timeout);
+      this.silent || log(this, 'acquired at ' + helpers.getTime(this.time) + suffix);
+      this.silent || setTimeout(() => log(this, 'released at ' + helpers.getTime() + suffix), this.timeout);
       return true;
     }
-    this.silent || log(this, 'rejected at', helpers.getTime(), suffix, {gone, timeout: this.timeout});
+    this.silent || log(this, 'rejected at ' + helpers.getTime() + suffix, {gone, timeout: this.timeout});
     return false;
   }
 
@@ -55,7 +56,7 @@ export class Locker {
     this.time = reset ? Date.now() : this.time;
     this.locked = true;
     this.owner = by;
-    this.silent || log(this, 'locked at', helpers.getTime(this.time), by ? 'by ' + by : '');
+    this.silent || log(this, 'locked at ' + helpers.getTime(this.time) + (by ? ' by ' + by : ''));
     return true;
   }
 
@@ -63,7 +64,7 @@ export class Locker {
   unlock(by) {
     this.time = Date.now();
     this.locked = false;
-    this.silent || log(this, 'unlocked at', helpers.getTime(this.time), by ? 'by ' + by : '', this.owner ? '[' + this.owner + ']' : '');
+    this.silent || log(this, 'unlocked at ' + helpers.getTime(this.time) + (by ? ' by ' + by : '') + (this.owner ? ' [' + this.owner + ']' : ''));
   }
 
 }
