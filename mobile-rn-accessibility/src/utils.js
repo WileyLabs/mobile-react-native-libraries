@@ -52,7 +52,7 @@ export async function requestStatus(cb) {
  * @see {@link https://github.com/facebook/react-native/issues/12492}
  */
 export function setFocus(elem, { name = '', silent = SILENT, verify = () => true } = { name: '', silent: SILENT, verify: () => true }) {
-  const obj = {...(!silent && { name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')})};
+  const obj = silent ? {} :  {name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
   if (!Accessibility.status && Platform.OS === 'android') {
     return;
   }
