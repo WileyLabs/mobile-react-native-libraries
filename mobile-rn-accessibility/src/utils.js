@@ -61,18 +61,13 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
     return;
   }
   try {
-    if (Platform.OS === 'ios') {
-      AccessibilityInfo.setAccessibilityFocus(findNodeHandle(elem));
+    const node = findNodeHandle(elem);
+    if (node && verify && verify()) {
+      Platform.OS === 'ios' ? AccessibilityInfo.setAccessibilityFocus(node) : UIManager.sendAccessibilityEvent(node, 8);
+      silent || log(obj);
     }
     else {
-      const node = findNodeHandle(elem);
-      if (node && verify && verify()) {
-        UIManager.sendAccessibilityEvent(node, 8);
-        silent || log(obj);
-      }
-      else {
-        silent || log('Verification failed', obj);
-      }
+      silent || log('Verification failed', obj);
     }
   }
   catch (err) {
@@ -270,9 +265,9 @@ export function a11yProps(
 }
 
 // Generates Accessibility labels for controls
-export function a11yLabel(label, type = 'button', value, disabled = false) {
-  const controlsTypes = ['button', 'tab', 'switch', 'radiobutton', 'checkbox', 'slider'];
-  const suffix = ((controlsTypes.indexOf(type) >= 0) && disabled) ? ', disabled' : '';
+export function a11yLabel(label, type = 'button', value, disabled = false, action) {
+  const controlsTypes = ['button', 'tab', 'switch', 'radiobutton', 'checkbox', 'slider', 'menuitem', 'listitem'];
+  let suffix = ((controlsTypes.indexOf(type) >= 0) && disabled) ? ', disabled' : '';
   const hasValue = suffix.length === 0 && (value !== undefined);
   let accessibilityLabel = label || '';
   const control = { type: '', data: '' };
@@ -315,6 +310,20 @@ export function a11yLabel(label, type = 'button', value, disabled = false) {
     case 'duration':
       accessibilityLabel.length > 0 && (accessibilityLabel += ' ');
       accessibilityLabel += getDuration(value);
+      break;
+    case 'menuitem':
+      control.type = 'Menu Item';
+      control.data = hasValue ? (value ?  'Selected' : '') : '';
+      if (!suffix.length && action && action.length) {
+        suffix = ', double tap to ' + action;
+      }
+      break;
+    case 'listitem':
+      control.type = 'List Item';
+      control.data = hasValue ? (value ?  'Selected' : '') : '';
+      if (!suffix.length && action && action.length) {
+        suffix = ', double tap to ' + action;
+      }
       break;
     default:
       if (type !== undefined && type.length) {

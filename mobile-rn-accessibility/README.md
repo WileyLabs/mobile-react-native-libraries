@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.10, 2018/08/27
+Version 0.0.11, 2018/08/29
 
 ## Module Public Interfaces
 
