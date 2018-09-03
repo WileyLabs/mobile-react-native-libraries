@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.11, 2018/08/29
+Version 0.0.12, 2018/09/03
 
 ## Module Public Interfaces
 
@@ -24,7 +24,7 @@ Init/Shut
 /**
  * Initializes component (should be called first)
  * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
- * @param options.debug emulate VoiceOver On for iOS
+ * @param options.debug emulate VoiceOver On for iOS (a11yStatus always returns true)
  */
 a11y.a11yInit(options)
 

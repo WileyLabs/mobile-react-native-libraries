@@ -266,7 +266,7 @@ export function a11yProps(
 
 // Generates Accessibility labels for controls
 export function a11yLabel(label, type = 'button', value, disabled = false, action) {
-  const controlsTypes = ['button', 'tab', 'switch', 'radiobutton', 'checkbox', 'slider', 'menuitem', 'listitem'];
+  const controlsTypes = ['button', 'tab', 'switch', 'radiobutton', 'checkbox', 'slider', 'menuitem', 'listitem', 'phone'];
   let suffix = ((controlsTypes.indexOf(type) >= 0) && disabled) ? ', disabled' : '';
   const hasValue = suffix.length === 0 && (value !== undefined);
   let accessibilityLabel = label || '';
@@ -298,7 +298,7 @@ export function a11yLabel(label, type = 'button', value, disabled = false, actio
       control.data = hasValue ? (value ?  'Checked' : 'Unchecked') : '';
       break;
     case 'link':
-      control.type = Platform.OS === 'ios' ? 'Link' : 'Button';
+      control.type = 'Link';
       break;
     case 'progress':
       control.type = 'Progress Bar';
@@ -321,6 +321,12 @@ export function a11yLabel(label, type = 'button', value, disabled = false, actio
     case 'listitem':
       control.type = 'List Item';
       control.data = hasValue ? (value ?  'Selected' : '') : '';
+      if (!suffix.length && action && action.length) {
+        suffix = ', double tap to ' + action;
+      }
+      break;
+    case 'phone':
+      control.type = 'Phone Number';
       if (!suffix.length && action && action.length) {
         suffix = ', double tap to ' + action;
       }
