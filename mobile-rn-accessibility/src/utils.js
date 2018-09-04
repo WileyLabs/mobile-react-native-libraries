@@ -63,8 +63,8 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
   try {
     const node = findNodeHandle(elem);
     if (node && verify && verify()) {
-      Platform.OS === 'ios' ? AccessibilityInfo.setAccessibilityFocus(node) : UIManager.sendAccessibilityEvent(node, 8);
       silent || log(obj);
+      Platform.OS === 'ios' ? AccessibilityInfo.setAccessibilityFocus(node) : UIManager.sendAccessibilityEvent(node, 8);
     }
     else {
       silent || log('Verification failed', obj);
