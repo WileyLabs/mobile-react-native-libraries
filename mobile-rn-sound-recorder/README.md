@@ -3,7 +3,7 @@
 A helper module to record voice audio in Redux.
 Redux/Saga wrapper for react-native-audio component.
 
-Version 0.0.3
+Version 0.0.4, 2018/09/14
 
 ## Module Public Interfaces
 
@@ -177,7 +177,22 @@ const rootReducer = combineReducers({
 
 export default rootReducer;
 ```
+or
 
+```javascript
+// rootReducer.js
+
+import { combineReducers } from 'redux';
+import soundRecorder from 'mobile-rn-sound-recorder';
+
+const rootReducer = combineReducers({
+  ...
+   [soundRecorder.NAME]: soundRecorder.reducer,
+  ...
+});
+
+export default rootReducer;
+```
 ### Step 2. Initialize & run sound recorder's saga
 ```javascript
 // rootSaga.js
@@ -189,6 +204,22 @@ export default function* rootSaga() {
   yield all([
     ...
     call(soundRecorderSaga),
+    ...
+  ]);
+}
+```
+or
+
+```javascript
+// rootSaga.js
+
+import { all, call } from 'redux-saga/effects';
+import soundRecorder from 'mobile-rn-sound-recorder';
+
+export default function* rootSaga() {
+  yield all([
+    ...
+    call(soundRecorder.saga),
     ...
   ]);
 }
@@ -259,11 +290,15 @@ class VoiceRecorder extends Component {
   };
 
   componentDidMount() {
-    // Optional wordsMap allows to re-write default PermissionAndroid texts
-    // const wordsMap = new Map([['titleMicrophonePermission', 'Permission...']]);
-    // logLevel allows to switch on recording logging
-    // e.g. this.props.onMount({ lang: 'ger', wordsMap, logLevel: 1 });
-    this.props.mountRequest({lang: 'ger'});
+    // Optional dictionary object that allows to re-write default messages
+    // const dictionary = {
+    //   titleMicrophonePermission: 'Mikrofon freischalten',
+    //   msgMicrophonePermission: 'App benötigt Zugriff auf Ihr Mikrofon, sodass Sie etwas aufnehmen können',
+    //   msgNoPermission: 'Für die Aufnahme wurde der Zugriff nicht erteilt.'
+    // };
+    // Note, that 1) the component will be drawn first time with the default props,
+    // 2) It is more safe to initialize recorder somewhere earlier than here on componentDidMount()
+    this.props.mountRequest({logLevel: 1, dictionary});
   }
 
   componentWillUnmount() {
@@ -337,6 +372,8 @@ export function* watchOnSoundError() {
   yield takeLatest(soundRecorderConstants.ON_ERROR, _onSoundError);
 }
 
+// Note: you could place soundRecorder.saga here in order to have all
+//       sound recorder's sagas in one place
 export function* watchOnSoundRecorder() {
   yield all([
     call(watchOnRecordingSaved),

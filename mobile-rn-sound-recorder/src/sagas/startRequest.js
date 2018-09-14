@@ -4,7 +4,7 @@ import { AudioRecorder } from 'react-native-audio';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { helpers, logging } from '../utils';
+import { helpers, log } from '../utils';
 
 // Creates channel for listening AudioRecorder notification onProgress
 function _createProgressChannel() {
@@ -50,9 +50,7 @@ function* _verifyState() {
 
 function* _startRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   if (!(yield call(_verifyState))) {
     return;

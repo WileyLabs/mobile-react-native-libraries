@@ -2,20 +2,16 @@ import { takeEvery, select, put } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { logging, fs } from '../utils';
+import { log, fs } from '../utils';
 
 function* _unmountRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   // Stop if running
-  if ((yield select(selectors.isRecording))) {
-    yield put(actions.stopRequest(false));
-  }
+  (yield select(selectors.isRecording)) && (yield put(actions.stopRequest(false)));
 
-  // Cleanup temporary file(s)
+  // Cleanup temporary file
   yield fs.awaitDeleteFile((yield select(selectors.getState)).recordingFile);
 
   // Reset states

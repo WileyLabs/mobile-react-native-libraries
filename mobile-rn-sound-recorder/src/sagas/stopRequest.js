@@ -3,17 +3,15 @@ import { AudioRecorder } from 'react-native-audio';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { fs, logging } from '../utils';
+import { fs, log } from '../utils';
 
 function* _stopRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   // If not recording now, just exit
   if (!(yield select(selectors.isRecording))) {
-    logging.log('Cannot stop recording, as it has not started');
+    log('Cannot stop recording, as it has not started');
     return false;
   }
 

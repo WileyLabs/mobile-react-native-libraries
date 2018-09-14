@@ -1,5 +1,5 @@
 import * as constants from './constants';
-import { logging } from './utils';
+import { log } from './utils';
 
 export const defaultInfo = {
   name: '',                   // file name (generated)
@@ -26,14 +26,10 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case constants.SET_STATE:
-    if (state.options.logLevel > 1) {
-        logging.deb({action});
-      }
+      state.options.logLevel > 1 && log({action});
       return { ...state, ...action.params };
     case constants.SET_INFO:
-    if (state.options.logLevel > 1) {
-        logging.deb({action});
-      }
+      state.options.logLevel > 1 && log({action});
       return { ...state, info: action.info };
     case constants.SET_CURRENT_TIME:
       return { ...state, currentTime: action.currentTime };

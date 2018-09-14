@@ -2,7 +2,7 @@ import { takeEvery, put, select } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { helpers, fs, generate, logging } from '../utils';
+import { helpers, fs, generate, log } from '../utils';
 
 /**
  * Saves last recording to the file
@@ -12,9 +12,7 @@ import { helpers, fs, generate, logging } from '../utils';
  */
 function* _saveAsFileRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   // Stop if running
   if ((yield select(selectors.isRecording))) {
@@ -24,8 +22,8 @@ function* _saveAsFileRequest(action) {
   const state = yield select(selectors.getState);
   const info = yield select(selectors.getInfo);
 
-  info.name = (action.fileInfo.name === undefined ? generate.guid() : action.fileInfo.name) + '.' + state.audioSettings.AudioEncoding;
-  info.path = action.fileInfo.path === undefined ? fs.getDocumentFile() : fs.parsePath(action.fileInfo.path);
+  info.name = (!action.fileInfo.name ? generate.guid() : action.fileInfo.name) + '.' + state.audioSettings.AudioEncoding;
+  info.path = !action.fileInfo.path ? fs.getDocumentFile() : fs.parsePath(action.fileInfo.path);
 
   const fileNamePath = fs.buildPath(info.path, info.name);
 

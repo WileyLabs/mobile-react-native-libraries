@@ -53,61 +53,36 @@ export function getDataFile(file) {
 // Reads file information
 // @return RNFS file statistics object on success, { size: -1 } otherwise
 export async function awaitGetFileStats(name, silent = true) {
-  return await RNFS.stat(name).catch(err => {
-    if (!silent) {
-      console.log(err.message);
-    }
-    return { size: -1 }; // error reading file stats
-  });
+  return await RNFS.stat(name).catch(err => { silent || console.log(err.message); return { size: -1 }; });
 }
 
 // Reads file, returns text on success, empty string otherwise
 export async function awaitReadFile(name, silent = true) {
-  return await RNFS.readFile(name)
-    .catch(err => { if (!silent) {
-                      console.log(err.message);
-                    }
-                    return '';
-                  });
+  return await RNFS.readFile(name).catch(err => { silent || console.log(err.message); return false; });
 }
 
 // Writes file, returns true on success, false otherwise
 export async function awaitWriteFile(name, data, encoding = 'utf8', silent = true) {
-  return await RNFS.writeFile(name, data, encoding).then(success => true)
-    .catch(err => { if (!silent) {
-                      console.log(err.message);
-                    }
-                    return false;
-                  });
+  return await RNFS.writeFile(name, data, encoding).then(success => true).catch(err => { silent || console.log(err.message); return false; });
+}
+
+// Appends data to the file, returns true on success, false otherwise
+export async function awaitAppendFile(name, data, encoding = 'utf8', silent = true) {
+  return await RNFS.appendFile(name, data, encoding).then(success => true).catch(err => { silent || console.log(err.message); return false; });
 }
 
 // Copies file
 export async function awaitCopyFile(src, dst, silent = true) {
-  return await RNFS.copyFile(src, dst).then(success => true)
-    .catch(err => { if (!silent) {
-                      console.log(err.message);
-                    }
-                    return false;
-                  });
+  return await RNFS.copyFile(src, dst).then(success => true).catch(err => { silent || console.log(err.message); return false; });
 }
 
 // Moves file
 export async function awaitMoveFile(src, dst, silent = true) {
-  return await RNFS.moveFile(src, dst).then(success => true)
-    .catch(err => { if (!silent) {
-                      console.log(err.message);
-                    }
-                    return false;
-                  });
+  return await RNFS.moveFile(src, dst).then(success => true).catch(err => { silent || console.log(err.message); return false; });
 }
 
 export async function awaitDeleteFile(file, silent = true) {
-  return await RNFS.unlink(file).then(success => true)
-    .catch(err => { if (!silent) {
-                      console.log(err.message);
-                    }
-                    return false;
-                  });
+  return await RNFS.unlink(file).then(success => true).catch(err => { silent || console.log(err.message); return false; });
 }
 
 // Reads bundle file, returns text on success, empty string otherwise
@@ -129,6 +104,17 @@ export async function awaitReadBundleHtml(uri) {
   return { uri, baseUrl: '', html: ''};
 }
 
+const sessionFile = helpers.formatTime(null, { date: true, separators: { time: '.'}}) + '.log';
+
+export async function awaitWriteTempFile(file, content, silent = true) {
+  const tempFile = buildPath([':temp', helpers.isDefined(file) ? file : sessionFile]);
+  const success = await awaitAppendFile(tempFile, content , 'utf8', silent);
+  if (success && !silent) {
+    console.log({tempFile});
+  }
+  return success;
+}
+
 export const fs = {
   buildPath,
   parsePath,
@@ -144,6 +130,7 @@ export const fs = {
   awaitDeleteFile,
   awaitReadBundleFile,
   awaitReadBundleHtml,
+  awaitWriteTempFile,
   PATH_BUNDLE,
   PATH_DOCUMENT,
   PATH_DATA,

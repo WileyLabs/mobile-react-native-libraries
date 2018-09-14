@@ -1,8 +1,8 @@
-import { Dictionary, fs } from './utils.js';
+import { fs } from './utils.js';
 
 // Public Constants
 
-export const NAME = 'soundRecorder';
+export const NAME = 'mobile-rn-sound-recorder';
 
 export const PATH_BUNDLE = fs.PATH_BUNDLE;
 export const PATH_DOCUMENT = fs.PATH_DOCUMENT;
@@ -10,9 +10,10 @@ export const PATH_DATA = fs.PATH_DATA;
 export const PATH_TEMP = fs.PATH_TEMP;
 
 // Public Notification Events
+const buildName = (name) => NAME + '/' + name;
 
-export const ON_ERROR             = 'soundRecorder/ON_ERROR';
-export const ON_RECORDING_SAVED   = 'soundRecorder/ON_RECORDING_SAVED';
+export const ON_ERROR             = buildName('ON_ERROR');
+export const ON_RECORDING_SAVED   = buildName('ON_RECORDING_SAVED');
 
 // Public Errors
 
@@ -47,11 +48,11 @@ export default publicConstants;
 
 // Private Events
 
-export const MOUNT_REQUEST        = 'soundRecorder/MOUNT_REQUEST';
-export const UNMOUNT_REQUEST      = 'soundRecorder/UNMOUNT_REQUEST';
-export const START_REQUEST        = 'soundRecorder/START_REQUEST';
-export const STOP_REQUEST         = 'soundRecorder/STOP_REQUEST';
-export const SAVE_AS_FILE_REQUEST = 'soundRecorder/SAVE_AS_FILE_REQUEST';
+export const MOUNT_REQUEST        = buildName('MOUNT_REQUEST');
+export const UNMOUNT_REQUEST      = buildName('UNMOUNT_REQUEST');
+export const START_REQUEST        = buildName('START_REQUEST');
+export const STOP_REQUEST         = buildName('STOP_REQUEST');
+export const SAVE_AS_FILE_REQUEST = buildName('SAVE_AS_FILE_REQUEST');
 
 // Private Constants
 
@@ -75,18 +76,8 @@ export const androidAudioSettings = {
   AudioEncodingBitRate: 32000
 };
 
-export const dictionaryEnglish = new Dictionary(new Map([
-  ['titleMicrophonePermission', 'Microphone Permission'],
-  ['msgMicrophonePermission', 'Application needs access to your microphone so you can record audio']
-]), 'eng');
-
-export const dictionaryGerman = new Dictionary(new Map([
-  ['titleMicrophonePermission', 'Mikrofon freischalten'],
-  ['msgMicrophonePermission', 'App benötigt Zugriff auf Ihr Mikrofon, sodass Sie etwas aufnehmen können'],
-]), 'ger');
-
 // Private Constants for Reducer
 
-export const SET_STATE = 'soundRecorder/SET_STATE';
-export const SET_INFO = 'soundRecorder/SET_INFO';
-export const SET_CURRENT_TIME = 'soundRecorder/SET_CURRENT_TIME';
+export const SET_STATE        = buildName('SET_STATE');
+export const SET_INFO         = buildName('SET_INFO');
+export const SET_CURRENT_TIME = buildName('SET_CURRENT_TIME');

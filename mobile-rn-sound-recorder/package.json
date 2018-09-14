@@ -1,18 +1,10 @@
 {
   "name": "mobile-rn-sound-recorder",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A helper module to record voice audio in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
   "contributors": [
-    {
-      "name": "Dmitry Mikhaylov",
-      "email": "dmikhaylov@wiley.com"
-    },
-    {
-      "name": "Fedorov, Daniil",
-      "email": "dfedorov@wiley.com"
-    },
     {
       "name": "Efimov, Andrey",
       "email": "aefimov@wiley.com"

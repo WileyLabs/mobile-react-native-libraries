@@ -3,7 +3,7 @@ import { Platform, PermissionsAndroid } from 'react-native';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { logging, generate, fs, helpers } from '../utils';
+import { log, generate, fs, helpers } from '../utils';
 
 // Requests permissions to use microphone for Android
 async function _checkPermission(state) {
@@ -11,13 +11,13 @@ async function _checkPermission(state) {
     return Promise.resolve(true);
   }
   const rationale = {
-    'title': state.dictionary.get('titleMicrophonePermission', 'Microphone Permission'),
-    'message': state.dictionary.get('msgMicrophonePermission', 'Application needs access to your microphone so you can record audio')
+    'title': helpers.getField(state, 'dictionary.titleMicrophonePermission', 'Microphone Permission'),
+    'message': helpers.getField(state, 'dictionary.msgMicrophonePermission', 'Application needs access to your microphone so you can record audio')
   };
   return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
     .then((result) => {
       if (state.options.logLevel > 0) {
-        console.log('Permission result:', result);
+        log('Permission result:', result);
       }
       return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
     });
@@ -26,14 +26,12 @@ async function _checkPermission(state) {
 /**
  * Initialize (Mount) Component
  * @param {options.audioSettings} audio settings (optinal)
- * @param {options.lang} language 'eng' or 'ger' (optinal, by default 'eng')
- * @param @param {options.wordsMap} words Map(key, value) (optinal, used for PermissionsAndroid.request)
+ * @param {options.dictionary} words
+ * @param @param {options.logLevel} logging level
 */
 function* _mountRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  helpers.getField(action, 'options.logLevel', (yield select(selectors.getOptions)).logLevel) >= 2 && log({action});
 
   // Reset all states
   const state = { isMounted: false,
@@ -43,23 +41,18 @@ function* _mountRequest(action) {
                   hasPermission: undefined,
                   error: constants.ERROR_NO_ERROR,
                   recordingFile: '',
+                  dictionary: helpers.getField(action, 'options.dictionary'),
                   options: {...action.options}
   };
 
   yield put(actions.setState(state));
 
-  // Set dictionary for string constants
-  const lang = action.options.lang !== undefined ? action.options.lang : 'eng';
-  const dictionary = (lang === 'ger') ? constants.dictionaryGerman : constants.dictionaryEnglish;
-  dictionary.update(action.options.wordsMap);
-  yield put(actions.setState({ dictionary }));
-
   // Check & update permissions
   let hasPermission = yield _checkPermission(yield select(selectors.getState));
   yield put(actions.setState({ hasPermission }));
-
   if (!hasPermission) {
-    yield put(actions.onError(helpers.buildError(constants.ERROR_NOT_PERMITTED, new Error('No recording permissions granted'))));
+    const error = helpers.getField(state, 'dictionary.msgNoPermission', 'No recording permissions granted');
+    yield put(actions.onError(helpers.buildError(constants.ERROR_NOT_PERMITTED, new Error(error))));
     return;
   }
 

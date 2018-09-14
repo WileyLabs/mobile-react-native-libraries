@@ -1,6 +1,4 @@
 import { NAME } from './constants';
-import { helpers } from './utils';
-import * as constants from './constants';
 
 // Public Selectors
 export const hasPermission = (state) => state[NAME].hasPermission;
@@ -11,6 +9,7 @@ export const isReadyToSave = (state) => state[NAME].isReadyToSave;
 export const getCurrentTime = (state) => state[NAME].currentTime;
 export const getInfo = (state) => state[NAME].info;
 export const getError = (state) => state[NAME].error;
+export const getDictionary = state => state[NAME].dictionary;
 
 // Public Export
 export const publicSelectors = {
@@ -22,6 +21,7 @@ export const publicSelectors = {
   getCurrentTime,     // current recording time in secs [Real Number]
   getInfo,            // descriptor of the last successfully saved file [Object]
   getError,           // current error [Object]
+  getDictionary       // current dictionary
 };
 
 export default publicSelectors;
@@ -33,4 +33,4 @@ export default publicSelectors;
 
 // Returns state
 export const getState = (state) => state[NAME];
-export const getLogLevel = (state) => helpers.getField(state[NAME].options, 'logLevel', constants.LOG_LEVEL);
+export const getOptions = (state) => state[NAME].options;
