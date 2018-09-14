@@ -2,13 +2,11 @@ import { takeEvery, put, select } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { logging, helpers } from '../utils';
+import { log, helpers } from '../utils';
 
 function* _setVolumeRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   const state = yield select(selectors.getState);
   const mute = helpers.getField(action, 'volume.mute', state.volume.mute);

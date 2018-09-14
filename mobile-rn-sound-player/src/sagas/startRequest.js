@@ -3,7 +3,7 @@ import { eventChannel } from 'redux-saga';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { helpers, logging, fs, publicUtils as utils } from '../utils';
+import { helpers, log, fs, publicUtils as utils } from '../utils';
 
 import Sound from 'react-native-sound';
 
@@ -82,10 +82,8 @@ function* _verifyState(action) {
  */
 function* _startRequest(action) {
 
-  const logLevel = yield select(selectors.getLogLevel);
-  if (logLevel  > 0) {
-    logging.log({action});
-  }
+  const logLevel = (yield select(selectors.getOptions)).logLevel;
+  logLevel > 1 && log({action});
 
   if (!(yield call(_verifyState, action))) {
     return;
@@ -150,9 +148,7 @@ function* _startRequest(action) {
 
     let started = false, isPaused = options.paused, updateCurrentTime = true;
 
-    if (logLevel === 1) {
-      logging.log({info: state.info});
-    }
+    logLevel >= 1 && log({info: state.info});
 
     while (true) {
 

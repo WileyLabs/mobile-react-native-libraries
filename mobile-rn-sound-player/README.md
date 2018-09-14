@@ -2,7 +2,7 @@
 
 Redux/Saga wrapper for react-native-sound component.
 
-Version 0.0.5
+Version 0.0.6, 2018/09/14
 
 ## Module Public Interfaces
 
@@ -184,6 +184,21 @@ export default function* rootSaga() {
   ]);
 }
 ```
+or
+```javascript
+// rootSaga.js
+
+import { all, call } from 'redux-saga/effects';
+import soundPlayer from 'mobile-rn-sound-player';
+
+export default function* rootSaga() {
+  yield all([
+    ...
+    call(soundPlayer.saga),
+    ...
+  ]);
+}
+```
 
 ## Usage in React Native components
 
@@ -248,6 +263,8 @@ class VoicePlayer extends Component {
   };
 
   componentDidMount() {
+    // Note, that 1) the component will be drawn first time with the default props,
+    // 2) It is more safe to initialize recorder somewhere earlier than here on componentDidMount()
     const options = { updateFrequency: 150, logLevel: 1 }; // optional, if differs from defaults
     this.props.mountRequest(options);
   }
@@ -313,6 +330,8 @@ export function* watchOnSoundError() {
   yield takeLatest(soundPlayerConstants.ON_ERROR, _onSoundError);
 }
 
+// Note: you could place soundPlayer.saga here in order to have all
+//       sound player's sagas in one place
 export function* watchOnSoundPlayer() {
   yield all([
     call(watchOnSoundError)

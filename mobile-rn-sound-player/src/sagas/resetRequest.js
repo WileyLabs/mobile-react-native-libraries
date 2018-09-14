@@ -2,13 +2,11 @@ import { takeEvery, put, select } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { logging } from '../utils';
+import { log } from '../utils';
 
 function* _resetRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  ((yield select(selectors.getOptions)).logLevel > 1) && log({action});
 
   if ((yield select(selectors.isPlaying))) {
     const error = yield select(selectors.getError);

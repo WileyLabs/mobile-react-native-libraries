@@ -1,12 +1,12 @@
 import { takeEvery, put } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
-import { logging, helpers } from '../utils';
+import { log, helpers } from '../utils';
 
 function* _onError(action) {
   const { error }  = action;
   const message = helpers.getErrorMessage(error);
-  logging.error({ error, message });
+  log({ error, message });
   yield put(actions.setState({ error }));
 }
 

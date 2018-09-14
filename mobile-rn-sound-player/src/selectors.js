@@ -1,6 +1,4 @@
 import { NAME } from './constants';
-import { helpers } from './utils';
-import * as constants from './constants';
 
 // Public Selectors
 export const isMounted = (state) => state[NAME].isMounted;
@@ -11,7 +9,6 @@ export const getInfo = (state) => state[NAME].info;
 export const getDuration = (state) => state[NAME].info.duration;
 export const getVolume = (state) => state[NAME].volume;
 export const getError = (state) => state[NAME].error;
-
 
 // Public Export
 export const publicSelectors = {
@@ -33,4 +30,4 @@ export default publicSelectors;
 // Private Selectors
 
 export const getState = (state) => state[NAME];
-export const getLogLevel = (state) => helpers.getField(state[NAME].options, 'logLevel', constants.LOG_LEVEL);
+export const getOptions = (state) => state[NAME].options;

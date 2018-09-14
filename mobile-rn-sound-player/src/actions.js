@@ -7,7 +7,7 @@ import * as constants from './constants';
  * @param options.updateFrequency update period for current pos in ms
  * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
  */
-export const mountRequest = (options) => ({ type: constants.MOUNT_REQUEST, options });
+export const mountRequest = (options = {}) => ({ type: constants.MOUNT_REQUEST, options });
 
 /**
  * Shutdowns component

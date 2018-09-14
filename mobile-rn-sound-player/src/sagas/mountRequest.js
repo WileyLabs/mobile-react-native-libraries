@@ -2,19 +2,17 @@ import { put, takeEvery, select } from 'redux-saga/effects';
 import * as constants from '../constants';
 import * as actions from '../actions';
 import * as selectors from '../selectors';
-import { logging, helpers } from '../utils';
+import { log, helpers } from '../utils';
 import Sound from 'react-native-sound';
 
 /**
- * Initialize (Mount) Component
+ * Initialize (Mount) Module
  * @param options.updateFrequency update period for current pos in ms
  * @param options.logLevel logging level (0 - no debug info, default; 1; 2 - wordy log)
 */
 function* _mountRequest(action) {
 
-  if ((yield select(selectors.getLogLevel)) > 0) {
-    logging.log({action});
-  }
+  helpers.getField(action, 'options.logLevel', (yield select(selectors.getOptions)).logLevel) >= 2 && log({action});
 
   const stateUpdate = { isMounted: false, isPlaying: false, isPaused: false,
                         currentTime: 0.0, volume: { mute: false, level: 1.0 },
