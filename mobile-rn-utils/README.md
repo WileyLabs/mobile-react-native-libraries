@@ -132,3 +132,16 @@ Translate given width in percent to width in pixels
 ### `heightFromPercentage(heightInPercent: string): number`
 
 Translate given height in percent to height in pixels
+
+## hocs -  a collection of Higher-Order Components
+
+withSize - a HOC that will dispatch onLayout method and pass to the wrapped component x, y, width, height via props (the x and y values are relative to the top left corner of the screen)
+
+### withSize Usage
+
+```javascript
+import withSize from 'mobile-rn-utils/hocs/withSize'
+
+// EnhancedComponent will receive x, y, with, height via props
+const EnhancedComponent = withSize(WrappedComponent);
+```
