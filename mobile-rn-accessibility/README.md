@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.13, 2018/09/04
+Version 0.0.14, 2018/09/24
 
 ## Module Public Interfaces
 
@@ -31,7 +31,7 @@ a11y.a11yInit(options)
 Redux/Saga:
 
   export function* saga() {
-    yield put(a11y.a11yInit({logLevel: 1, debug: true}));
+    yield put(a11y.a11yInit({logLevel: 1, debug: false}));
   }
 
 Navigation

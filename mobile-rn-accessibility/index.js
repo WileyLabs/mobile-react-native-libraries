@@ -22,8 +22,8 @@ export {
 export default {
   reducer, saga, utils,
   NAME,
-  a11yNavigate, a11yInit, a11yScreen, a11yStatus, a11yProps, a11yLabel, setFocus, postFocus,
-  addLabel, addClassAttribute,
-  cloneChildrenWithProps, readRomanNumber, getDateTime, getDuration, Locker,
+  a11yNavigate, a11yInit, a11yScreen, a11yStatus, a11yProps, a11yLabel, setFocus, postFocus, addLabel, addClassAttribute,
+  cloneChildrenWithProps, readRomanNumber, getDateTime, getDuration,
+  Locker,
   logging
 };

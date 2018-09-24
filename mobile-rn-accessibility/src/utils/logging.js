@@ -8,7 +8,7 @@
  */
 import helpers from './helpers.js';
 
-const EMULATOR = helpers.isDevice('emulator');
+const EMULATOR = helpers.isRunningOn('emulator');
 
 // Prepends string with char
 export function prepend(text, chr, upToLength) {
@@ -82,7 +82,7 @@ export function logff(format, ...args) {
 export const loge = logff.bind(logff, { color: 'red', space: '' });
 export const logw = logff.bind(logff, { color: 'orange', space: ''});
 export const logd = logff.bind(logff, { color: 'green', space: ' ', stack: true});
-export const logs = helpers.isDevice('emulator') && logf.bind(logf);
+export const logs = helpers.isRunningOn('emulator') && logf.bind(logf);
 
 export const logging = {
   log: logf,          // substitution for console.log()

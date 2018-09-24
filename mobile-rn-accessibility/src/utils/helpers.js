@@ -85,7 +85,11 @@ export function getErrorMessage(error) {
   return getField(error, 'details.error.message', 'Error ' + error.errCode);
 }
 
-export function isDevice(descriptor) {
+/**
+ * Checks running environment, e.g. isRunningOn('tablet, ios'), or isRunningOn('ios, device');
+ * returns true if device sutisfies descriptor, false otherwise
+ */
+export function isRunningOn(descriptor) {
   try {
     let device = (DeviceInfo.isTablet() ? 'tablet' : 'phone') + (Platform.OS === 'ios' ? ', ios' : ', android') +
                  (DeviceInfo.isEmulator() ? ', emulator' : ', device');
@@ -95,6 +99,8 @@ export function isDevice(descriptor) {
     return false;
   }
 }
+
+export const isDevice = isRunningOn;
 
 /**
  * Clones children with additional props (original props will be replaced)
@@ -124,6 +130,44 @@ export function cloneChildrenWithProps(children, props, silent = true) {
   return children;
 }
 
+// Returns formatted date & time as hh:mm:ss.ddd
+export function formatTime(time, options = { time: true, date: false, separators: { time: ':', date: '-', vals: ' '}}) {
+  const fmt = {
+    time: getField(options, 'time', true), date: getField(options, 'date', false),
+    separators: { time: getField(options, 'time', '.'), date: getField(options, 'date', '-'), vals: getField(options, 'vals', ' ') }
+  };
+  try {
+    const moment = time ? time : new Date();
+    const date = fmt.date ? [moment.getFullYear(), prepend((moment.getMonth() + 1).toString(), '0', 2), moment.getDate()].join(fmt.separators.date) : '';
+    if (!options.time) {
+      return date;
+    }
+    const hmsd = moment.toTimeString().slice(0, 8).replace(/:/g, fmt.separators.time) + fmt.separators.time + prepend(time.getMilliseconds().toString(), '0', 3);
+    return date + fmt.separators.vals + hmsd;
+  }
+  catch (err) {
+  }
+  return '';
+}
+
+// Updates fields in style from styleUpdate
+export function updateStyle(style, styleUpdate, silent = true) {
+  if (!style || !styleUpdate) {
+    return style;
+  }
+  const updatedStyle = {...styleUpdate};
+  for (var key in style) {
+    if (style.hasOwnProperty(key)) {
+      const updatedValue = getField(styleUpdate, key);
+      if (updatedValue !== undefined) {
+        updatedStyle[key] = typeof updatedValue === 'object' ? updateStyle(style[key], updatedValue, silent) : updatedValue;
+        silent || console.log(key, '(', style[key], '==>', updatedValue, ')');
+      }
+    }
+  }
+  return {...style, ...updatedStyle};
+}
+
 export const helpers = {
   getField,
   putWithin,
@@ -132,8 +176,10 @@ export const helpers = {
   isDefined,
   block, sleep,
   buildError, getErrorMessage,
-  isDevice,
-  cloneChildrenWithProps
+  isRunningOn, isDevice,
+  cloneChildrenWithProps,
+  updateStyle,
+  formatTime
 };
 
 export default helpers;

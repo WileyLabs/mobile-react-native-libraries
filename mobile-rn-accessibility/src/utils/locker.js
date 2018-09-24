@@ -38,7 +38,7 @@ export class Locker {
       this.locked = true;
       this.owner = by;
       this.silent || log(this, 'acquired at ' + helpers.getTime(this.time) + suffix);
-      this.silent || setTimeout(() => log(this, 'released at ' + helpers.getTime() + suffix), this.timeout);
+      this.silent || setTimeout(() => log(this, 'release scheduled at ' + helpers.getTime() + suffix), this.timeout);
       return true;
     }
     this.silent || log(this, 'rejected at ' + helpers.getTime() + suffix, {gone, timeout: this.timeout});

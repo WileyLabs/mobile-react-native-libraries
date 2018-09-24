@@ -17,14 +17,15 @@ export function htmlWrapper(html, what, wrapper, flags  = 'g') {
 }
 
 // Sets aria label ('how') for html fragment ('how:what') or array of tags
-export function addLabel(html, how = { what: '', label: '', role: '', flags: '' }) {
+export function addLabel(html, how = { what: '', label: '', role: '', flags: '', specificAttrs: [] }) {
   try {
     const labels = Array.isArray(how) ? how.slice() : [how];
     let updatedHtml = html;
     labels.forEach(elem => {
       const role = elem.role || 'document';
       const label = elem.label || '';
-      const wrapper = { before: `<span role="${role}" aria-label="${label}">`, after: '</span>' };
+      const before = `<span role="${role}" aria-label="${label}"` + (elem.specificAttrs ? ' ' + elem.specificAttrs.join(' ') : '') + '>';
+      const wrapper = { before, after: '</span>' };
       helpers.isDefined(elem.what) && (updatedHtml = htmlWrapper(updatedHtml, elem.what, wrapper, elem.flags));
     });
     return updatedHtml;

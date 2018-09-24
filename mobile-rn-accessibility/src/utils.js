@@ -1,6 +1,6 @@
 /**
  * Accessibility utils
- * 
+ *
  * Version: 0.0.6, 2018.08.16
  * Created: 2018.07.01 by mmalykh@wiley.com
  */
@@ -203,10 +203,11 @@ function getPropsAndroid(accessible, { type, checked, disabled, important }) {
 }
 
 // Returns accessibility properties of JSX object for iOS
-function getPropsIOS(accessible, { type, traits, disabled, hidden }) {
+// 0.57: ...(hint && { accessibilityHint: hint })
+function getPropsIOS(accessible, { type, traits, disabled, hidden, hint }) {
   const props = {
     ...(accessible !== undefined && { accessible }),
-    ...(hidden && { accessibilityElementsHidden: true }),
+    ...(hidden !== undefined && { accessibilityElementsHidden: hidden }),
     ...(traits && { accessibilityTraits: traits })
   };
   if (!traits && type && !disabled) {
@@ -229,7 +230,7 @@ function getPropsIOS(accessible, { type, traits, disabled, hidden }) {
  * @param params.focus function to be called on ref to set accessiblity focus
  * @param params.object object type (e..g. 'view', 'modal')
  * @param params.traits special value for 'accessibilityTraits' (iOS)
- * @param params.hidden special value for 'accessibilityElementHidden' (iOS)
+ * @param params.hidden special value for 'accessibilityElementsHidden' (iOS)
  * @param params.important spacial value for 'importantForAccessibility'; (Android)
  * @param params properties to add to a11yProps (e.g. a11yStatus)
  */

@@ -15,7 +15,7 @@ export const initRequest = (options = { logLevel: 0, debug: false }) => ({ type:
 /**
  * Passes current screen to Accessibility
  * @param screen name of the current screen
- * @param method navigation method (jumpTo, replace, push, pop, immediatelyResetRouteStack)
+ * @param method navigation method (push, pop, others: jumpTo, replace, immediatelyResetRouteStack)
  */
 export const navigateRequest = (screen, method = 'jumpTo', sender = '') => ({ type: constants.NAVIGATE_REQUEST, screen, method, sender });
 

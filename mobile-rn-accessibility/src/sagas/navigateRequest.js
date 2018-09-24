@@ -1,3 +1,11 @@
+/**
+ * Navigation saga
+ *
+ * Version: 0.0.2, 2018.09.07
+ * Created: 2018.03.01 by mmalykh@wiley.com
+ * Latest changes:
+ *      2018.09.07 0.0.2 Syntax changed
+ */
 import { put, select, take, actionChannel, call } from 'redux-saga/effects';
 import * as selectors from '../selectors';
 import * as actions from '../actions';
@@ -7,7 +15,7 @@ import logging from '../utils/logging.js';
 const log = logging.logff.bind(logging.logff, {name: '[A11Y::Navigation] ', space: ' '});
 
 // Calculates parameters for 'push' navigation method
-function* pushScreen(action, current) {
+function* _pushScreen(action, current) {
   if (action.screen === current.screen) {
     return {};
   }
@@ -18,23 +26,16 @@ function* pushScreen(action, current) {
 }
 
 // Calculates parameters for 'pop' navigation method
-function* popScreen(action, current) {
+function* _popScreen(current) {
   const stack = current.stack ? current.stack.slice() : [];
-  if (!stack.length) {
-    return {};
-  }
-  const screen = stack.length ? stack.pop() : current.screen;
-  return { screen, stack };
+  return !stack.length ? {} : { screen: stack.length ? stack.pop() : current.screen, stack };
 }
 
 // Calculates parameters for all navigation methods except 'push' and 'pop'
-function* navigate(action, current) {
+function* _navigate(action, current) {
   const screen = Array.isArray(action.screen) ? action.screen[action.screen.length - 1] : action.screen;
-  if (screen === current.screen) {
-    return {};
-  }
-  const stack = (current.stack !== undefined && current.stack.length > 0 && (action.method !== 'immediatelyResetRouteStack')) ? current.stack.slice(1) : [];
-  return { screen, stack };
+  return screen === current.screen ? {} : { screen,
+           stack: (current.stack !== undefined && current.stack.length > 0 && (action.method !== 'immediatelyResetRouteStack')) ? current.stack.slice(1) : [] };
 }
 
 // Processes Accessibility navigation
@@ -47,16 +48,16 @@ function* _processNavigationEvent(action) {
   try {
     switch (action.method) {
       case 'push':
-        navigationParams = yield call(pushScreen, action, {screen, stack});
+        navigationParams = yield call(_pushScreen, action, {screen, stack});
         break;
       case 'pop':
         if (action.screen && action.screen.length && action.screen !== screen) {
           return;
         }
-        navigationParams = yield call(popScreen, action, {screen, stack});
+        navigationParams = yield call(_popScreen, {screen, stack});
         break;
       default:
-        navigationParams = yield call(navigate, action, {screen, stack});
+        navigationParams = yield call(_navigate, action, {screen, stack});
     }
     if (navigationParams.screen !== undefined) {
       yield put(actions.setParams(navigationParams.screen, navigationParams.stack));
