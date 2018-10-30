@@ -1,8 +1,13 @@
 # mobile-rn-device-orientation
 
-A helper module to manage your device orientation state in Redux.
+A helper module to manage your device orientation state in Redux-saga.
 
-Version 0.0.4, 2018/08/14
+Version 0.0.5, 2018/10/30
+
+### Latest changes
+
+ver 0.0.5 Removed specific orientation for Android as react-native-orientation with RN 0.56 does not support it
+          https://github.com/yamill/react-native-orientation/issues/308
 
 ## Module Public Interfaces
 

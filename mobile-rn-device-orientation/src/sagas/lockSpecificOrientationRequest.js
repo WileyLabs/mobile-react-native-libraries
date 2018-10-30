@@ -3,6 +3,9 @@ import Orientation from 'react-native-orientation';
 import { LOCK_SPECIFIC_ORIENTATION_REQUEST, specificMode, log } from '../constants';
 import { setSpecificOrientationLock }  from '../actions';
 import selectors  from '../selectors';
+import specificOrientationInterface from '../specificOrientation';
+
+const specificOrientation = specificOrientationInterface(Orientation);
 
 function* _lockSpecificOrientationRequest({specific}) {
   if (!specific) {
@@ -15,8 +18,8 @@ function* _lockSpecificOrientationRequest({specific}) {
   if (index >= 0 && index <= 2) {
     yield put(setSpecificOrientationLock(specific));
     specific === specificMode.PORTRAIT && Orientation.lockToPortrait();
-    specific === specificMode.LANDSCAPELEFT && Orientation.lockToLandscapeLeft();
-    specific === specificMode.LANDSCAPERIGHT && Orientation.lockToLandscapeRight();
+    specific === specificMode.LANDSCAPELEFT && specificOrientation.lockToLandscapeLeft();
+    specific === specificMode.LANDSCAPERIGHT && specificOrientation.lockToLandscapeRight();
     silent || log('Specific orientation locked to ' + specific);
   }
   else {

@@ -5,6 +5,9 @@ import constants from '../constants';
 import selectors  from '../selectors';
 import { setSpecificOrientation } from '../actions';
 import { log } from '../constants';
+import specificOrientationInterface from '../specificOrientation';
+
+const specificOrientation = specificOrientationInterface(Orientation);
 
 function* _onSpecificOrientationChange({specific}) {
   // check if processed already
@@ -19,8 +22,8 @@ function* _onSpecificOrientationChange({specific}) {
   const orientationLock = yield select(selectors.getSpecificOrientationLock);
   if (orientationLock && (orientationLock !== specific)) {
     orientationLock === constants.specificMode.PORTRAIT && Orientation.lockToPortrait();
-    orientationLock === constants.specificMode.LANDSCAPELEFT && Orientation.lockToLandscapeLeft();
-    orientationLock === constants.specificMode.LANDSCAPERIGHT && Orientation.lockToLandscapeRight();
+    orientationLock === constants.specificMode.LANDSCAPELEFT && specificOrientation.lockToLandscapeLeft();
+    orientationLock === constants.specificMode.LANDSCAPERIGHT && specificOrientation.lockToLandscapeRight();
   }
 }
 
