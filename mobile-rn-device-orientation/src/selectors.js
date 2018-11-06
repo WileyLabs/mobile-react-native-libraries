@@ -1,22 +1,13 @@
 import { NAME } from './constants';
 
-export const getDeviceOrientation = state => state[NAME].orientation;
-export const isLandscape = state => state[NAME].orientation === 'LANDSCAPE';
-
-export const getOrientation = state => state[NAME].orientation;
-export const getOrientationLock = state => state[NAME].orientationLock;
-export const getSpecificOrientation = state => state[NAME].specificOrientation;
-export const getSpecificOrientationLock = state => state[NAME].specificOrientationLock;
-export const getSilent = state => state[NAME].silent;
+export const getDeviceOrientation = state => state[NAME].status ? (state[NAME].status.landscape ? 'LANDSCAPE' : 'PORTRAIT') : undefined;
+export const isLandscape = state => state[NAME].status ? state[NAME].status.landscape : undefined;
+export const isRotated = state => state[NAME].status ? state[NAME].status.rotated : undefined;
 
 const publicSelectors = {
   getDeviceOrientation,
   isLandscape,
-  getOrientation,
-  getOrientationLock,
-  getSpecificOrientation,
-  getSpecificOrientationLock,
-  getSilent
+  isRotated
 };
 
 export default publicSelectors;

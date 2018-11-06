@@ -2,9 +2,11 @@
 
 A helper module to manage your device orientation state in Redux-saga.
 
-Version 0.0.5, 2018/10/30
+Version 0.0.6, 2018/11/06
 
 ### Latest changes
+
+ver 0.0.6 Module API simplified
 
 ver 0.0.5 Removed specific orientation for Android as react-native-orientation with RN 0.56 does not support it
           https://github.com/yamill/react-native-orientation/issues/308
@@ -14,34 +16,68 @@ ver 0.0.5 Removed specific orientation for Android as react-native-orientation w
 ### Constants
 
 ```javascript
-import { constants as deviceOrientationConstants } from 'mobile-rn-device-orientation'
-
-// deviceOrientationConstants.NAME - this constant will be used later in app root reducer and module selectors
+  NAME                    - component name (for reducer)
+  ON_ORIENTATION_CHANGED  - notification on orientation change
 ```
 
-### Action Creators
+### Lock orientation Action
 
 ```javascript
-import { actions as deviceOrientationActions,
-         constants as deviceOrientationConstants } from 'mobile-rn-device-orientation'
+export const lockOrientationRequest = (landscape, rotated) => ({
+  type: constants.LOCK_ORIENTATION_REQUEST,
+  landscape,
+  rotated
+});
+```
 
-// const options = { lockOrientation: deviceOrientationConstants.mode.PORTRAIT, silent: false };
-// options.lockOrientation - immediate call of lockOrientation with provided orientation (default: undefined)
-// options.lockSpecificOrientation - immediate call of lockSpecificOrientation with provided specific orientation  (default: undefined)
-// options.silent - if false debug information will be added to console log  (default: true)
-// deviceOrientationActions.initRequest(options) - dispatch this action on app launch to initialize the module
+### Notification Action
+
+```javascript
+// Notifications
+export const onOrientationChanged = (landscape, rotated) => ({
+  type: constants.ON_ORIENTATION_CHANGED,
+  landscape,
+  rotated
+});
 ```
 
 ### Selectors
-```javascript
-import { selectors as deviceOrientationSelectors } from 'mobile-rn-device-orientation'
 
-// deviceOrientationSelectors.isLandscape() - returns true if your device is in landscape orientation; otherwise returns false;
-// deviceOrientationSelectors.getDeviceOrientation() - depending on the current orientation, returns one of the following string values:
-//   "LANDSCAPE"
-//   "PORTRAIT"
-//   "PORTRAITUPSIDEDOWN"
-//    "UNKNOWN"
+```javascript
+export const getDeviceOrientation = state => state[NAME].status ? (state[NAME].status.landscape ? 'LANDSCAPE' : 'PORTRAIT') : undefined;
+export const isLandscape = state => state[NAME].status ? state[NAME].status.landscape : undefined;
+export const isRotated = state => state[NAME].status ? state[NAME].status.rotated : undefined;
+```
+
+### Module API
+
+```javascript
+  /**
+   * Lock device orientation
+   * [param] landscape true for LANDSCAPE, false for PORTRAIT
+   * [param] rotated (optional) true for Upside-down (PORTRAIT)/for Landscape-left (LANDSCAPE)
+   * **rotated param maybe not supported on some devices
+  */
+  lock(landscape, rotated);
+  
+  /**
+   * Unlock all previously locked orientationsn
+  */
+  unlock()
+  
+  /**
+   * Returns current orientation parameters
+  */
+  const orientationParams = getParams()
+  const { landscape, rotated } = orientationParams;
+
+  /**
+   * Backward compatibility
+  */
+  lockToPortrait()        /** lock orientation to PORTRAIT */
+  lockToLandscape()       /** lock orientation to LANDSCAPE */
+  unlockAllOrientations() /** unlock all previously locked orientations */
+
 ```
 
 ## Getting started
@@ -67,23 +103,39 @@ $ yarn add react-native-orientation
 $ react-native link react-native-orientation
 ```
 
-## Initialization (3 steps)
+## Initialization (2 steps)
+
+**Step 1. Add Reducer**
 
 ```javascript
 // rootReducer.js
-
 import { combineReducers } from 'redux';
-import { reducer as deviceOrientationReducer, constants as deviceOrientationConstants } from 'mobile-rn-device-orientation';
+import deviceOrientation from 'mobile-rn-device-orientation';
 
 const rootReducer = combineReducers({
   ...
-   // Step 1. Register deviceOrientationReducer
-   [deviceOrientationConstants.NAME]: deviceOrientationReducer,
+  [deviceOrientation.NAME]: deviceOrientation.reducer
   ...
-});
+};
 
 export default rootReducer;
+```
+or
 
+```javascript
+import { reducer as deviceOrientationReducer,
+         constants as deviceOrientationConstants } from 'mobile-rn-device-orientation';
+
+const rootReducer = combineReducers({
+  ...
+  [deviceOrientationConstants.NAME]: deviceOrientationReducer
+  ...
+};
+
+```
+**Step 2. Add Saga**
+
+```javascript
 // rootSaga.js
 
 import { all, call } from 'redux-saga/effects';
@@ -97,9 +149,9 @@ export default function* rootSaga() {
     ...
   ]);
 }
-
-OR
-
+```
+or
+```javascript
 import deviceOrientation from 'mobile-rn-device-orientation';
 
 export default function* rootSaga() {
@@ -109,7 +161,15 @@ export default function* rootSaga() {
     ...
   ]);
 }
+```
 
+
+## Usage 
+
+**Sagas**
+
+Lock orientation with Redux Action
+```javascript
 // features/app/sagas/initAppRequest.js
 
 import { put, takeEvery } from 'redux-saga/effects';
@@ -120,10 +180,14 @@ function* _initAppRequest({ navigator }) {
   console.log('----saga app._initAppRequest saga-----');
 
   ...
-  // Step 3. Initialize device orientation module
-  yield put(deviceOrientationActions.initRequest());
+  // Lock orientation to PORTRAIT
+  yield put(deviceOrientationActions.lockOrientationRequest(false));
 
-  // Put your app init logic here
+  ... 
+
+  // Unlock all orientations
+  yield put(deviceOrientationActions.lockOrientationRequest());
+
   ...
 }
 
@@ -132,9 +196,64 @@ export function* watchInitAppRequest() {
 }
 
 ```
+Track changes in current orientation
+```javascript
+// features/app/sagas/onOrientationChanged.js
 
-## Usage in React Native components
+import { put, takeEvery } from 'redux-saga/effects';
+import deviceOrientation from 'mobile-rn-device-orientation';
 
+function* _orientationChanged({ landscape, rotated }) {
+
+  // landscape: true if current mode is LANDSCAPE, false for PORTRAIT
+  // rotated: true if your device is rotated: Upside down for PORTRAIT mode, Lanscale-Left for LANDSCAPE mode
+  //          false if your device is not rotated: portrait in PORTRAIT mode, Lanscale-Right for LANDSCAPE mode
+
+  // Put your logic here
+  ...
+}
+
+export function* _watchOnOrientationChanged() {
+  yield takeEvery(deviceOrientation.ON_ORIENTATION_CHANGED, _orientationChanged);
+}
+
+```
+
+**Function Code**
+
+Lock orientation with module API
+```javascript
+import deviceOrientation from 'mobile-rn-device-orientation';
+
+/**
+ * Lock to PORTRAIT
+ * export const lock = (landscape, rotated) => {}
+*/
+deviceOrientation.lock(false);
+
+// or
+
+deviceOrientation.lockToPortrait();
+.....
+
+/** Unlock all previously locked orientations */
+
+deviceOrientation.unlock();
+
+// or
+
+deviceOrientation.unlockAllOrientations();
+
+/** Get current orientation */
+
+const { landscape, rotated } = deviceOrientation.getParams();
+
+
+```
+
+**React Native components**
+
+Containers
 ```javascript
 // HomeContainer.js
 
@@ -146,12 +265,16 @@ import { selectors as deviceOrientationSelectors } from 'mobile-rn-device-orient
 function mapStateToProps(state) {
   return {
     ...
-    // isLandscape() selector returns true when your device is in LANDSCAPE mode; otherwise it will return false
-    //
+    /** true if your device is in landscape orientation; otherwise returns false; */
     landscape: deviceOrientationSelectors.isLandscape(state),
-    //
-    // deviceOrientation() selector returns one of the following string values "LANDSCAPE"|"PORTRAIT"|"PORTRAITUPSIDEDOWN"|"UNKNOWN"
-    //
+    ...
+    /** 
+     * true if your device is rotated: Upside down for PORTRAIT mode, Lanscale-Left for LANDSCAPE mode
+     * false if your device is not rotated: portrait in PORTRAIT mode, Lanscale-Right for LANDSCAPE mode
+    */ 
+    rotated: deviceOrientationSelectors.isRotated(state),
+    ...
+    /** string, one of: "LANDSCAPE", "PORTRAIT" or undefined */
     deviceOrientation: deviceOrientationSelectors.getDeviceOrientation(state)
     ...
   };
@@ -165,4 +288,8 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
+
 ```
+
+eof

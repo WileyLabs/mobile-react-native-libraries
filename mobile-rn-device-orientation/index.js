@@ -1,26 +1,28 @@
 import reducer from './src/reducer';
 import saga from './src/sagas';
-import actions from './src/actions';
 import selectors from './src/selectors';
 import constants from './src/constants';
+import orientation from './src/orientation';
+import actions from './src/actions';
 
-const { NAME, mode, specificMode, ON_ORIENTATION_CHANGE, ON_SPECIFIC_ORIENTATION_CHANGE } = constants;
-const { initRequest, lockOrientation, lockSpecificOrientation } = actions;
-const { getOrientation, getSpecificOrientation } = selectors;
+const { NAME, ON_ORIENTATION_CHANGED } = constants;
+const { getDeviceOrientation, isLandscape, isRotated } = selectors;
+const { lockOrientationRequest } = actions;
+const { lock, unlock, getParams, lockToPortrait, lockToLandscape, unlockAllOrientations } = orientation;
 
 export default {
   reducer, saga,
-  NAME, mode, specificMode,
-  ON_ORIENTATION_CHANGE, ON_SPECIFIC_ORIENTATION_CHANGE,
-  initRequest, getOrientation, getSpecificOrientation, lockOrientation, lockSpecificOrientation
+  NAME, ON_ORIENTATION_CHANGED,                   // constants
+  getDeviceOrientation, isLandscape, isRotated,   // selectors
+  lockOrientationRequest,                         // action
+  lockToPortrait, lockToLandscape, unlockAllOrientations,     // compatibility functions
+  lock, unlock, getParams                         // functions
 };
 
 export {
-  actions,
   reducer,
   saga,
   selectors,
-  constants
+  constants,
+  actions
 };
-
-
