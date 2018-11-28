@@ -30,6 +30,12 @@ export default publicActions;
 // ******************************************************************
 // Private Section
 
+/**
+ * Notifies on Accessibility screen change
+ * @param screen name of the current screen
+ */
+export const onScreenChanged = screen => ({ type: constants.ON_SCREEN_CHANGED, screen });
+
 // Private Action Creators for Reducer
 export const setParams = (screen, stack) => ({ type: constants.SET_PARAMS, screen, stack });
 export const setStatus = status => ({ type: constants.SET_STATUS, status });

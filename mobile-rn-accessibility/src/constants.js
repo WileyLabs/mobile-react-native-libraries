@@ -2,10 +2,12 @@
 export const NAME = 'mobile-rn-accessibility';
 
 // Action Types
+export const ON_SCREEN_CHANGED = NAME + '/ON_SCREEN_CHANGED';
 
 // Exported Public Constants
 export const publicConstants = {
-  NAME                       // component name
+  NAME,                       // component name
+  ON_SCREEN_CHANGED           // accessibility screen changed
 };
 
 export default publicConstants;

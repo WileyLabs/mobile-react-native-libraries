@@ -9,7 +9,7 @@ import logging from './src/utils/logging.js';
 const { a11yProps, a11yLabel, setFocus, postFocus, cloneChildrenWithProps,
         addLabel, addClassAttribute,
         readRomanNumber, getDateTime, getDuration, Locker } = utils;
-const { NAME } = constants;
+const { NAME, ON_SCREEN_CHANGED } = constants;
 const { navigateRequest: a11yNavigate, initRequest: a11yInit } = actions;
 const { getStatus: a11yStatus, getScreen: a11yScreen } = selectors;
 
@@ -21,7 +21,7 @@ export {
 // direct access
 export default {
   reducer, saga, utils,
-  NAME,
+  NAME, ON_SCREEN_CHANGED,
   a11yNavigate, a11yInit, a11yScreen, a11yStatus, a11yProps, a11yLabel, setFocus, postFocus, addLabel, addClassAttribute,
   cloneChildrenWithProps, readRomanNumber, getDateTime, getDuration,
   Locker,
