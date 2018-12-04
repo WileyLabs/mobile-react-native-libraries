@@ -2,7 +2,7 @@
 
 A helper module to support accessibility.
 
-Version 0.0.15, 2018/11/28
+Version 0.0.16, 2018/12/04
 
 ## Module Public Interfaces
 
@@ -10,15 +10,16 @@ Version 0.0.15, 2018/11/28
 
 ```
 
-    NAME                - component name (for reducer)
-    ON_SCREEN_CHANGED   - notification that accessibility screen has changed
+    NAME        - component name (for reducer)
+
 ```
 
 ### Action Creators
 
-#### Initialize accessibility functionality for the Application
 ```
-Implementation in mobile-rn-accessibility >>>>>
+import a11y from 'mobile-rn-accessibility'
+
+Init/Shut
 
 /**
  * Initializes component (should be called first)
@@ -27,19 +28,13 @@ Implementation in mobile-rn-accessibility >>>>>
  */
 a11y.a11yInit(options)
 
-Usage in appSaga.js >>>>>
+Redux/Saga:
 
-import a11y from 'mobile-rn-accessibility'
+  export function* saga() {
+    yield put(a11y.a11yInit({logLevel: 1, debug: true}));
+  }
 
-function* saga() {
-  ...
-  yield put(a11y.a11yInit({logLevel: 1, debug: false}));
-  ...
-}
-```
-#### Pass current screen to accessibility
-```
-Implementation in mobile-rn-accessibility >>>>>
+Navigation
 
 /**
  * Passes current screen to Accessibility
@@ -48,42 +43,6 @@ Implementation in mobile-rn-accessibility >>>>>
  * @param sender name of the sender (for debugging purposes)
  */
 a11y.a11yNavigate(screen, method = 'jumpTo', sender = '')
-
-Usage in app.js >>>>>
-
-import a11y from 'mobile-rn-accessibility'
-
-When navigating between application screens:
-
-a11y.a11yNavigate('Home');
-
-When showing popup:
-
-  a11y.a11yNavigate('NotificationDlg', 'push'); // on componentDidMount()
-  ....
-  a11y.a11yNavigate('NotificationDlg', 'pop');  // on componentWillUnmount()
-  ```
-
-#### Track of the accessibility screens changes
-  ```
-Implementation in mobile-rn-accessibility >>>>>
-
-/**
- * Notifies on Accessibility screen change
- * @param screen name of the current screen
- */
-export const onScreenChanged = screen => ({ type: constants.ON_SCREEN_CHANGED, screen });
-
-Usage in app.js >>>>>
-
-import a11y from 'mobile-rn-accessibility'
-
-function* _watchOnScreenChanged() {
-  while (true) {
-    const screen = yield take(a11y.ON_SCREEN_CHANGED);
-    yield put(onScreenChanged(screen)); // application-specific event on Screen Changed
-  }
-}
 
 ```
 

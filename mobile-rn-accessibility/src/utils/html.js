@@ -6,12 +6,15 @@
  */
 import helpers from './helpers';
 
+const log = console.log.bind('[helpers]');
+
  // Wraps 'what' with 'wrapper.begin' and 'wrapper.end' and returns updated html
 export function htmlWrapper(html, what, wrapper, flags  = 'g') {
   try {
     return html.replace(new RegExp(what, flags), (wrapper.before || '') + what + (wrapper.after || ''));
   }
   catch (err) {
+    log(err.message);
   }
   return html;
 }
@@ -31,6 +34,7 @@ export function addLabel(html, how = { what: '', label: '', role: '', flags: '',
     return updatedHtml;
   }
   catch (err) {
+    log(err.message);
   }
   return html;
 }
@@ -47,6 +51,7 @@ export function addClassAttribute(html, how = { class: '', attr: '', value: '', 
     return updatedHtml;
   }
   catch (err) {
+    log(err.message);
   }
   return html;
 }
@@ -69,6 +74,7 @@ export function addClassAttributeAsText(html, className, attrText) {
     return updatedHtml;
   }
   catch (err) {
+    log(err.message);
   }
   return html;
 }

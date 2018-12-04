@@ -16,6 +16,7 @@ export const initRequest = (options = { logLevel: 0, debug: false }) => ({ type:
  * Passes current screen to Accessibility
  * @param screen name of the current screen
  * @param method navigation method (push, pop, others: jumpTo, replace, immediatelyResetRouteStack)
+ * @param sender name of the message sender
  */
 export const navigateRequest = (screen, method = 'jumpTo', sender = '') => ({ type: constants.NAVIGATE_REQUEST, screen, method, sender });
 
@@ -30,10 +31,6 @@ export default publicActions;
 // ******************************************************************
 // Private Section
 
-/**
- * Notifies on Accessibility screen change
- * @param screen name of the current screen
- */
 export const onScreenChanged = screen => ({ type: constants.ON_SCREEN_CHANGED, screen });
 
 // Private Action Creators for Reducer

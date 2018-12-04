@@ -7,6 +7,7 @@
 import { Platform, UIManager, findNodeHandle, AccessibilityInfo } from 'react-native';
 import html from './utils/html.js';
 import helpers from './utils/helpers.js';
+import text from './utils/text.js';
 import Locker from './utils/locker.js';
 import logging from './utils/logging.js';
 
@@ -46,9 +47,9 @@ export async function requestStatus(cb) {
 /**
  * Sets accessibility focus on element
  * @param elem Element
- * @param options.name element name (optional)
- * @param options.silent false to switch on logging and error reporting
- * @param options.verify function to be called just before sendAccesibilityEvent to verify that elem exists (Android, rn 0.56+)
+ * @param name element name (optional options {})
+ * @param silent false to switch on logging and error reporting (optional options {})
+ * @param verify function to be called just before sendAccesibilityEvent to verify that elem exists (Android, rn 0.56+) (optional options {})
  * @see {@link https://github.com/facebook/react-native/issues/12492}
  */
 export function setFocus(elem, { name = '', silent = SILENT, verify = () => true } = { name: '', silent: SILENT, verify: () => true }) {
@@ -78,114 +79,13 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
 /**
  * Posts accessibility focus
  * @param elem Element
- * @param options.name element name (optional)
- * @param options.timeout post timeout
- * @param options.silent false to switch on logging
- * @param options.verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+)
+ * @param name element name (optional options {})
+ * @param timeout post timeout (optional options {})
+ * @param silent false to switch on logging (optional options {})
+ * @param verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+) (optional options {})
  */
 export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, verify = () => true } = { name: '', timeout: 333, silent: SILENT, verify: () => true } ) {
   elem && setTimeout(() => setFocus(elem, { name: (name ? 'post: ' + name : ''), silent: !(silent === false), verify}), timeout || 333);
-}
-
-/**
- * Converts Roman number (string) to Arabic number
- * @param str Roman number as string
- * @see {@link https://www.selftaughtjs.com/algorithm-sundays-converting-roman-numerals/}
- */
-function fromRoman(str) {
-  let result = 0; // the result is now a number, not a string
-  try {
-    const decimal = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-    const roman = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
-    for (let i = 0; i <= decimal.length; i++) {
-      while (str.indexOf(roman[i]) === 0) {
-        result += decimal[i];
-        str = str.replace(roman[i], '');
-      }
-    }
-  }
-  catch (err) {
-    result = undefined;
-  }
-  return result;
-}
-
-/**
- * Translates Roman numbers to arabic numbers for Accessibility labels
- * @param text text with Roman number (search for first appearance of MDCLXVI symbols)
- * @param separator text separator, if specified then only first part is taken for analysis
- * @param silent if true then no error information printed
- *
- * @example Section II. Examples... => Section 2. Examples...
- */
-export function readRomanNumber(text, separator = '.', silent = SILENT) {
-  try {
-    const parts = separator ? text.split(separator) : [text];
-    const startsAt = parts[0].search(/^[MDCLXVI)(]+$/);
-    if (startsAt >= 0) {
-      const number = fromRoman(parts[0].slice(startsAt));
-      return ((number === undefined) ? '' : number) + separator + (parts.length > 1 ? parts.slice(1).join(separator) : '');
-    }
-  }
-  catch (err) {
-    silent || log(err.message);
-  }
-  return text;
-}
-
-/**
- * Translates Date for Accessibility labels (accessibility label should read Date as a Date and not as Numbers)
- * @param dateAsText date as text
- * @param silent if true then no error information printed
- * @param locale locale to apply for conversion
- * @param options options to apply for conversion
- */
-export function getDateTime(
-    dateAsText, silent = SILENT, locale = 'en-US',
-    options = { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: undefined }) {
-  try {
-    return new Date(dateAsText).toLocaleString(locale, options);
-  }
-  catch (err) {
-    silent || log(err.message);
-  }
-  return dateAsText;
-}
-
-/**
- * Translates duration specified as 'hh:mm:ss' or 'mm:ss' for Accessibility labels;
- * First digit position in text is used as initial time position
- * @param text duration as text ('hh:mm:ss' or 'mm:ss')
- * @param format duration's format; by default 'hh:mm:ss' (L(text) >= 5) or 'mm:ss' (L(text) < 5)
- * @param shorten if true then leading zeroes are skipped
- * @param silent if true then no error information printed
- */
-export function getDuration(text, format = '', shorten = false, silent = SILENT) {
-  try {
-    const abbrs = [ 'hh', 'mm', 'ss' ];
-    const names = [ { one: 'hour', many: 'hours' }, { one: 'minute', many: 'minutes' }, { one: 'second', many: 'seconds' } ];
-    let duration = 0, time = '';
-    let timeStartsAt = text.search(/\d+/);
-    const hms = text.slice(timeStartsAt < 0 ? 0 : timeStartsAt);
-    const fmt = (format === undefined || !format.length) ? (hms.length > 5 ? 'hh:mm:ss' : 'mm:ss') : format;
-    abbrs.forEach((elem, index) => {
-      const pos = fmt.search(elem);
-      if (pos >= 0) {
-        const value = Number(hms.slice(pos, pos + 2));
-        if (shorten && value === 0 && !(index === 2 && duration === 0))  {
-          return;
-        }
-        duration += value;
-        const skip = (index === 2 && duration !== 0 && value === 0); // skip if seconds are 0
-        !skip && (time += (time.length ? ', ' : '') + value + ' ' + names[index][value === 1 ? 'one' : 'many']);
-      }
-    });
-    return (timeStartsAt > 0 ? text.slice(0, timeStartsAt) : '') + time;
-  }
-  catch (err) {
-    silent || log(err.message);
-    return text;
-  }
 }
 
 // Returns accessibility properties of JSX object for Android
@@ -233,6 +133,7 @@ function getPropsIOS(accessible, { type, traits, disabled, hidden, hint }) {
  * @param params.hidden special value for 'accessibilityElementsHidden' (iOS)
  * @param params.important spacial value for 'importantForAccessibility'; (Android)
  * @param params properties to add to a11yProps (e.g. a11yStatus)
+ * @param addProps optional additional props to be passes as 'accesisility props'
  */
 export function a11yProps(
   accessible,
@@ -310,7 +211,7 @@ export function a11yLabel(label, type = 'button', value, disabled = false, actio
       break;
     case 'duration':
       accessibilityLabel.length > 0 && (accessibilityLabel += ' ');
-      accessibilityLabel += getDuration(value);
+      accessibilityLabel += text.getDuration(value);
       break;
     case 'menuitem':
       control.type = 'Menu Item';
@@ -349,8 +250,10 @@ export function a11yLabel(label, type = 'button', value, disabled = false, actio
 export const publicUtils = {
   // Accessibility focus
   setFocus, postFocus,
-  // Helpers (conversion to voice formats)
-  readRomanNumber, getDateTime, getDuration, Locker,
+  // Helpers
+  Locker,
+  readRomanNumber: text.readRomanNumber, replaceRomanNumbers: text.replaceRomanNumbers,
+  getDateTime: text.getDateTime, getDuration: text.getDuration,
   // JSX properties & helpers
   a11yProps, a11yLabel, cloneChildrenWithProps: helpers.cloneChildrenWithProps,
   // Track accessibility status

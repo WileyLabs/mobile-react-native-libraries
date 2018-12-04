@@ -87,7 +87,7 @@ export function getErrorMessage(error) {
 
 /**
  * Checks running environment, e.g. isRunningOn('tablet, ios'), or isRunningOn('ios, device');
- * returns true if device sutisfies descriptor, false otherwise
+ * returns true if device satisfies descriptor, false otherwise
  */
 export function isRunningOn(descriptor) {
   try {

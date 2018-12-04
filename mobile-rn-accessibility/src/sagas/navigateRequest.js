@@ -34,8 +34,9 @@ function* _popScreen(current) {
 // Calculates parameters for all navigation methods except 'push' and 'pop'
 function* _navigate(action, current) {
   const screen = Array.isArray(action.screen) ? action.screen[action.screen.length - 1] : action.screen;
-  return screen === current.screen ? {} : { screen,
-           stack: (current.stack !== undefined && current.stack.length > 0 && (action.method !== 'immediatelyResetRouteStack')) ? current.stack.slice(1) : [] };
+  const stack = (current.stack && current.stack.length > 0 && (action.method !== 'immediatelyResetRouteStack')) ?
+                  current.stack.slice(1) : [];
+  return screen === current.screen ? {} : { screen, stack };
 }
 
 // Processes Accessibility navigation
@@ -61,13 +62,12 @@ function* _processNavigationEvent(action) {
     }
     if (navigationParams.screen !== undefined) {
       yield put(actions.setParams(navigationParams.screen, navigationParams.stack));
-      yield put(actions.onScreenChanged(navigationParams.screen));
+      yield put(actions.onChangeScreen(navigationParams.screen));
       logLevel >= 1 && log(navigationParams);
     }
   } catch (err) {
     logLevel >= 1 && log(err.message);
   }
-
  }
 
 // Navigation saga

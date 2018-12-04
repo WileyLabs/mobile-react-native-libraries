@@ -38,6 +38,7 @@ export function logf() {
 /**
  * Logs function callee and passed parameters, first parameter is always format
  * @param format output format
+ * @param args arguments
  * @example
  *    const log = logging.logff.bind(logging.logff, {name: '[A11Y::Navigation]'});
  *    log(action);
