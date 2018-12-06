@@ -62,7 +62,7 @@ function* _processNavigationEvent(action) {
     }
     if (navigationParams.screen !== undefined) {
       yield put(actions.setParams(navigationParams.screen, navigationParams.stack));
-      yield put(actions.onChangeScreen(navigationParams.screen));
+      yield put(actions.onScreenChanged(navigationParams.screen));
       logLevel >= 1 && log(navigationParams);
     }
   } catch (err) {
