@@ -18,12 +18,15 @@ export {
   reducer, saga, selectors, constants
 };
 
+const createLocker = props => new Locker(props);
+
 // direct access
 export default {
   reducer, saga, utils,
   NAME, ON_SCREEN_CHANGED,
   a11yNavigate, a11yInit, a11yScreen, a11yStatus, a11yProps, a11yLabel, setFocus, postFocus, addLabel, addClassAttribute,
   cloneChildrenWithProps, readRomanNumber, replaceRomanNumbers, getDateTime, getDuration,
-  Locker,
+  createLocker,
   logging
 };
+
