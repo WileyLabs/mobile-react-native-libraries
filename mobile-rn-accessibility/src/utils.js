@@ -85,8 +85,8 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
  * @param silent false to switch on logging (optional options {})
  * @param verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+) (optional options {})
  */
-export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, verify = () => true } = { name: '', timeout: 333, silent: SILENT, verify: () => true } ) {
-  elem && setTimeout(() => setFocus(elem, { name: (name ? 'post: ' + name : ''), silent: !(silent === false), verify}), timeout || 333);
+export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, verify = () => true, done = () => {} } ) {
+  elem && setTimeout(() => setFocus(elem, { name: (name ? 'post: ' + name : ''), silent: !(silent === false), verify, done}), timeout || 333);
 }
 
 // Returns accessibility properties of JSX object for Android
