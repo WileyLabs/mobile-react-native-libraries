@@ -52,8 +52,8 @@ export async function requestStatus(cb) {
  * @param verify function to be called just before sendAccesibilityEvent to verify that elem exists (Android, rn 0.56+) (optional options {})
  * @see {@link https://github.com/facebook/react-native/issues/12492}
  */
-export function setFocus(elem, { name = '', silent = SILENT, verify = () => true } = { name: '', silent: SILENT, verify: () => true }) {
-  const obj = silent ? {} :  {name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
+export function setFocus(elem, { name = '', silent = SILENT, verify = () => true, done = () => {} }) {
+  const obj = silent ? {} :  { name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
   if (!Accessibility.status && Platform.OS === 'android') {
     return;
   }
@@ -63,9 +63,10 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
   }
   try {
     const node = findNodeHandle(elem);
-    if (node && verify && verify()) {
+    if (node && (!verify || verify())) {
       silent || log(obj);
       Platform.OS === 'ios' ? AccessibilityInfo.setAccessibilityFocus(node) : UIManager.sendAccessibilityEvent(node, 8);
+      done && done(name);
     }
     else {
       silent || log('Verification failed', obj);
