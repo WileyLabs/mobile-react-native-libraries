@@ -53,7 +53,7 @@ export async function requestStatus(cb) {
  * @see {@link https://github.com/facebook/react-native/issues/12492}
  */
 export function setFocus(elem, { name = '', silent = SILENT, verify = () => true, done = () => {} } =
-                               { name = '', silent = SILENT, verify = () => true, done = () => {} }) {
+                               { name: '', silent: SILENT, verify: () => true, done: () => {} }) {
   const obj = silent ? {} :  { name, elem: helpers.getField(elem, '_nativeTag'), object: helpers.getField(elem, 'viewConfig.uiViewClassName')};
   if (!Accessibility.status && Platform.OS === 'android') {
     return;
@@ -87,7 +87,7 @@ export function setFocus(elem, { name = '', silent = SILENT, verify = () => true
  * @param verify function to be called by setFocus to verify that elem exists ('mounted' on Android, rn 0.56+) (optional options {})
  */
 export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, verify = () => true, done = () => {} } =
-                                { name = '', timeout = 333, silent = SILENT, verify = () => true, done = () => {} }) {
+                                { name: '', timeout: 333, silent: SILENT, verify: () => true, done: () => {} }) {
   elem && setTimeout(() => setFocus(elem, { name: (name ? 'post: ' + name : ''), silent, verify, done}), timeout || 333);
 }
 
