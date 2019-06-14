@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-network-info",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A helper module to manage network info state in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",

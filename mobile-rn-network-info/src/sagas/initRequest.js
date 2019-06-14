@@ -1,6 +1,6 @@
 import { eventChannel } from 'redux-saga';
 import { call, put, take, takeEvery } from 'redux-saga/effects';
-import { NetInfo } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import { INIT_REQUEST } from '../constants';
 import { setConnected, onConnectionChange, updateRequest } from '../actions';
 

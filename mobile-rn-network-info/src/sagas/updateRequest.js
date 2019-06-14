@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { NetInfo } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import { UPDATE_REQUEST } from '../constants';
 import { setConnected } from '../actions';
 
