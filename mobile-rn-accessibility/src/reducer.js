@@ -16,8 +16,8 @@ export default function reducer(state = defaultState, action = {}) {
       state.options.logLevel >= 2 && log({action, state});
       return {
         ...state,
-        ...(action.screen && {screen: action.screen}),
-        ...(action.stack && {stack: action.stack})
+        ...(action.screen ? {screen: action.screen} : {}),
+        ...(action.stack ? {stack: action.stack} : {})
       };
     case constants.SET_STATUS:
       state.options.logLevel >= 2 && log({action, state});
@@ -27,7 +27,7 @@ export default function reducer(state = defaultState, action = {}) {
        };
     case constants.SET_STATE:
       state.options.logLevel >= 2 && log({action});
-      return {...state, ...action.params};
+      return {...state, ...(action.params ? action.params : {})};
     default:
       return state;
   }

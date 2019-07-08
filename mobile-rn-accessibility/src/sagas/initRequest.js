@@ -30,7 +30,7 @@ export function* _watchStatus() {
 
 function* _initRequest(action) {
   helpers.getField(action, 'options.logLevel', (yield select(selectors.getOptions)).logLevel) >= 2 && console.log('[A11Y::Init]', {action});
-  yield put(actions.setState({...defaultState , ...(action.options && {options: action.options})}));
+  yield put(actions.setState({...defaultState , ...(action.options ? {options: action.options} : {})}));
   yield fork(_watchStatus);
 }
 

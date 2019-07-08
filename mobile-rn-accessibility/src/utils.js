@@ -94,7 +94,7 @@ export function postFocus(elem, { name = '', timeout = 333, silent = SILENT, ver
 // Returns accessibility properties of JSX object for Android
 function getPropsAndroid(accessible, { type, checked, disabled, important }) {
   const props = {
-    ...(accessible !== undefined && { accessible }),
+    ...(accessible !== undefined ? { accessible } : {}),
     ...(important !== undefined ? { importantForAccessibility: important } : { importantForAccessibility: accessible ? 'yes' : 'no-hide-descendants' })
   };
   if (type && !disabled) {
@@ -109,9 +109,9 @@ function getPropsAndroid(accessible, { type, checked, disabled, important }) {
 // 0.57: ...(hint && { accessibilityHint: hint })
 function getPropsIOS(accessible, { type, traits, disabled, hidden, hint }) {
   const props = {
-    ...(accessible !== undefined && { accessible }),
-    ...(hidden !== undefined && { accessibilityElementsHidden: hidden }),
-    ...(traits && { accessibilityTraits: traits })
+    ...(accessible !== undefined ? { accessible } : {}),
+    ...(hidden !== undefined ? { accessibilityElementsHidden: hidden } : {}),
+    ...(traits ? { accessibilityTraits: traits } : {})
   };
   if (!traits && type && !disabled) {
     const controlType = { radiobutton: 'button', text: 'text', header: 'text', button: 'button', tab: 'button',
