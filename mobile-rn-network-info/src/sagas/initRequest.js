@@ -5,11 +5,7 @@ import { INIT_REQUEST } from '../constants';
 import { setConnected, onConnectionChange, updateRequest } from '../actions';
 
 function _createEventChannel() {
-  return eventChannel(emitter => {
-    const networkStatusDidChange = connected => emitter(connected);
-    NetInfo.isConnected.addEventListener('connectionChange', networkStatusDidChange);
-    return () => NetInfo.isConnected.removeEventListener(networkStatusDidChange);
-  });
+  return eventChannel((emitter) => NetInfo.addEventListener((state) => emitter(state.isConnected)));
 }
 
 function* _initRequest() {

@@ -4,7 +4,7 @@ import { UPDATE_REQUEST } from '../constants';
 import { setConnected } from '../actions';
 
 async function _isConnected() {
-  return await NetInfo.isConnected.fetch();
+  return await NetInfo.fetch();
 }
 
 function* _updateRequest() {
