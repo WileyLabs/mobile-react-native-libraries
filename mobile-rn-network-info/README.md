@@ -102,6 +102,8 @@ import { takeLatest } from 'redux-saga/effects';
 import { constants as networkInfoConstants } from 'mobile-rn-network-info';
 
 export function* _onConnectionChange({ connected, isConnected, isWifi, isCellular, connectionType, netInfoState }) {
+  // Please note, "connected" and "isConnected" properties are synonims! Another words connected === isConnected
+  // "connected" property preserved for backward compatibility only  
   console.log('----saga app._onConnectionChange saga---- connected=', connected);
 
   const routeName = yield select(navigationSelectors.getRouteName);
