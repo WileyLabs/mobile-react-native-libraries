@@ -26,9 +26,9 @@ import { actions as networkInfoActions } from 'mobile-rn-network-info'
 ```javascript
 import { selectors as networkInfoSelectors } from 'mobile-rn-network-info'
 
-// deviceOrientationSelectors.isConnected() - returns true when your device has network connection; otherwise returns false
-// deviceOrientationSelectors.isWifi() - returns true when your device has 'wifi' network connection; otherwise returns false
-// deviceOrientationSelectors.isCellular() - returns true when your device has 'cellular' network connection; otherwise returns false
+// networkInfoSelectors.isConnected() - returns true when your device has network connection; otherwise returns false
+// networkInfoSelectors.isWifi() - returns true when your device has 'wifi' network connection; otherwise returns false
+// networkInfoSelectors.isCellular() - returns true when your device has 'cellular' network connection; otherwise returns false
 ```
 
 ## Getting started
