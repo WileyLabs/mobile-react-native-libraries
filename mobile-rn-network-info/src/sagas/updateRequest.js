@@ -1,19 +1,21 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
 import NetInfo from "@react-native-community/netinfo";
 import { UPDATE_REQUEST } from '../constants';
-import { setConnected } from '../actions';
+import { setNetInfoState } from '../actions';
 
-async function _isConnected() {
+async function _netInfoFetch() {
   return await NetInfo.fetch();
 }
 
 function* _updateRequest() {
-  // console.log('----saga networkInfo._updateRequest saga----');
-  let connected = yield call(_isConnected);
-
-  console.log(`Internet connected: ${connected}`);
-
-  yield put(setConnected(connected));
+  console.log('----saga mobile-rn-network-info._updateRequest saga----');
+  try {
+    const netInfoState = yield call(_netInfoFetch);
+    console.log('NetInfo state:', netInfoState);
+    yield put(setNetInfoState(netInfoState));
+  } catch (error) {
+    console.log('mobile-rn-network-info error: ', error);
+  }
 }
 
 export function* watchUpdateRequest() {

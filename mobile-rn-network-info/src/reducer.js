@@ -1,9 +1,9 @@
-import { SET_CONNECTED } from './constants';
+import { SET_NET_INFO_STATE } from './constants';
 
-export default function reducer(state = { connected: null }, action = {}) {
+export default function reducer(state = { netInfoState: {} }, action = {}) {
   switch (action.type) {
-    case SET_CONNECTED:
-      return { connected: action.connected };
+    case SET_NET_INFO_STATE:
+      return { netInfoState: action.netInfoState };
     default:
       return state;
   }

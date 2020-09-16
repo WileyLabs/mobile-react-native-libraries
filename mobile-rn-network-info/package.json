@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-network-info",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A helper module to manage network info state in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
@@ -30,6 +30,8 @@
     "react-native"
   ],
   "peerDependencies": {
-    "react-native": ">= 0.60.0 or >= 0.59"
+    "react-native": ">= 0.60.0 or >= 0.59",
+    "@react-native-community/netinfo": ">=5.9.6",
+    "redux-saga": ">=1.1.3"
   }
 }

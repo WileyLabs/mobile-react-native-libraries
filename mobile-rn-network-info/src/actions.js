@@ -9,10 +9,11 @@ export const initRequest = () => ({ type: constants.INIT_REQUEST });
 export const updateRequest = () => ({ type: constants.UPDATE_REQUEST });
 
 // Notify "external" world about connection change
-export const onConnectionChange = (connected) => ({ type: constants.ON_CONNECTION_CHANGE, connected });
+export const onConnectionChange = ({ connected, isConnected, isWifi, isCellular, connectionType, netInfoState }) =>
+  ({ type: constants.ON_CONNECTION_CHANGE, connected, isConnected, isWifi, isCellular, connectionType, netInfoState });
 
 // Action Creators for Reducers
-export const setConnected = connected => ({ type: constants.SET_CONNECTED, connected });
+export const setNetInfoState = netInfoState => ({ type: constants.SET_NET_INFO_STATE, netInfoState });
 
 const publicActions = {
   initRequest,

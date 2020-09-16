@@ -8,7 +8,7 @@ export const ON_CONNECTION_CHANGE = 'networkInfo/ON_CONNECTION_CHANGE';
 
 // Constants for Reducers
 
-export const SET_CONNECTED = 'networkInfo/SET_CONNECTED';
+export const SET_NET_INFO_STATE = 'networkInfo/SET_NET_INFO_STATE';
 
 const publicConstants = {
   NAME,
