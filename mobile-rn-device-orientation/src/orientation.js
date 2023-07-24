@@ -1,7 +1,7 @@
 /**
  * Orientation utilities
 */
-import Orientation from 'react-native-orientation';
+import Orientation from 'react-native-orientation-locker';
 import { log } from './utils';
 
 let currParams = {
