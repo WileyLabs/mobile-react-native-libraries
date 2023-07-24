@@ -1,6 +1,6 @@
 {
   "name": "mobile-rn-device-orientation",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A helper module to manage your device orientation state in Redux",
   "license": "MIT",
   "author": "John Wiley & Sons, Inc.",
