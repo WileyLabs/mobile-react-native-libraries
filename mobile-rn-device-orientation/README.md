@@ -82,26 +82,15 @@ export const isRotated = state => state[NAME].status ? state[NAME].status.rotate
 
 ## Getting started
 
-### Step 1. Install mobile-rn-device-orientation
+### Step 1. Install react-native-orientation-locker
 
 ```
-$ npm install mobile-rn-device-orientation --save
+$ npm install react-native-orientation-locker --save
 # or with yarn
-$ yarn add mobile-rn-device-orientation
+$ yarn add react-native-orientation-locker
 ```
 
-### Step 2. Install react-native-orientation
-
-If you have already installed [react-native-orientation](https://github.com/yamill/react-native-orientation) as a dependency for your project you can skip this step. Otherwise run the following command:
-
-```
-$ npm install react-native-orientation --save
-# or with yarn
-$ yarn add react-native-orientation
-
-# link
-$ react-native link react-native-orientation
-```
+### Step 2. Follow instructions from [react-native-orientation-locker](https://github.com/wonday/react-native-orientation-locker)
 
 ## Initialization (2 steps)
 
