@@ -2,9 +2,11 @@
 
 A helper module to manage your device orientation state in Redux-saga.
 
-Version 0.0.6, 2018/11/06
+Version 0.0.7, 2023/07/24
 
 ### Latest changes
+
+ver 0.0.7 Use react-native-orientation-locker instead of outdated react-native-orientation
 
 ver 0.0.6 Module API simplified
 
